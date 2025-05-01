@@ -1,3 +1,5 @@
+
+package src;
 public class Joueur {
     // Nom du joueur
     private String nom;

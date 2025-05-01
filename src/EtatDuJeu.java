@@ -1,3 +1,4 @@
+package src;
 public class EtatDuJeu {
     // Taille du plateau
     private int taillePlateau;

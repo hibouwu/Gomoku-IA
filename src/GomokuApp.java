@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GomokuApp extends Application {
 
@@ -97,15 +99,29 @@ public class GomokuApp extends Application {
                 return;
             }
 
-            if (modeIA && etat.getJoueurActuel()=='O') {
+//            if (modeIA && etat.getJoueurActuel()=='O') {
+//                Platform.runLater(() -> {
+//                    int[] m = LancerJeu.jouerCoupIA(etat, niveauIA);
+//                    int[] res2 = LancerJeu.jouerCoup(etat, m[0], m[1]);
+//                    drawStone(m[0], m[1]);
+//                    if (res2[0]==1) showAlert("Victoire IA !");
+//                    else if (res2[0]==0) showAlert("Match nul !");
+//                });
+//            }
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+            pause.setOnFinished(evt -> {
+                // Coup de l'IA
+                int[] m = LancerJeu.jouerCoupIA(etat, niveauIA);
+                int[] res2 = LancerJeu.jouerCoup(etat, m[0], m[1]);
+                drawStone(m[0], m[1]);
+                // On reporte la boîte de dialogue sur la file d'attente JavaFX
                 Platform.runLater(() -> {
-                    int[] m = LancerJeu.jouerCoupIA(etat, niveauIA);
-                    int[] res2 = LancerJeu.jouerCoup(etat, m[0], m[1]);
-                    drawStone(m[0], m[1]);
-                    if (res2[0]==1) showAlert("Victoire IA !");
-                    else if (res2[0]==0) showAlert("Match nul !");
+                    if (res2[0] == 1) showAlert("Victoire IA !");
+                    else if (res2[0] == 0) showAlert("Match nul !");
                 });
-            }
+            });
+            pause.play();
+
         });
 
         Button btnR = new Button("Recommencer");

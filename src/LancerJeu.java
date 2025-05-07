@@ -64,11 +64,27 @@ public class LancerJeu {
         char next = etat.getJoueurActuel() == 'X' ? 'O' : 'X';
         etat.setJoueurActuel(next);
     }
-
-    /** Délègue à l’IA basique (MinMaxBasique). */
-    public static int[] jouerCoupIA(EtatDuJeu etat, int profondeur) {
-        return new MinMaxBasique().trouverMeilleurCoup(etat, profondeur);
+    /** Délègue à l’IA selon le niveau choisi. */
+    /**
+     * @param niveau 1 = simple, 2 = MinMax basique, 3 = MinMax+αβ
+     */
+    public static int[] jouerCoupIA(EtatDuJeu etat, int niveau) {
+        switch (niveau) {
+            case 1:
+                return new IAHeuristiqueSimple().trouverMeilleurCoup(etat);
+            case 2:
+                return new MinMaxBasique().trouverMeilleurCoup(etat, 1);
+            case 3:
+                //return MinMaxAlphaBeta.trouverMeilleurCoup(etat);
+            default:
+                throw new IllegalArgumentException("Niveau IA invalide : " + niveau);
+        }
     }
+
+//    /** Délègue à l’IA basique (MinMaxBasique). */
+//    public static int[] jouerCoupIA(EtatDuJeu etat, int profondeur) {
+//        return new MinMaxBasique().trouverMeilleurCoup(etat, profondeur);
+//    }
 
     /**
      * Joue un coup et renvoie :

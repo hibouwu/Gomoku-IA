@@ -51,17 +51,20 @@ public class GomokuApp extends Application {
             choix.setStyle("-fx-alignment:center; -fx-padding:50; "
                     + "-fx-background-color:rgba(245,245,220,0.84);");
             Button niv1 = new Button("Niveau Simple");
-            Button niv2 = new Button("Niveau Avancé");
-            niv1.setPrefWidth(250); niv2.setPrefWidth(250);
+            Button niv2 = new Button("Niveau Medium");
+            Button niv3 = new Button("Niveau Avancé");
+            niv1.setPrefWidth(250); niv2.setPrefWidth(250);niv3.setPrefWidth(250);
             niv1.setStyle("-fx-background-color:#4CAF50; -fx-text-fill:white;");
             niv2.setStyle("-fx-background-color:#2196F3; -fx-text-fill:white;");
+            niv3.setStyle("-fx-background-color:#f32171; -fx-text-fill:white;");
             niv1.setOnAction(ev -> { modeIA=true; niveauIA=1; lancerJeuUI(); });
-            niv2.setOnAction(ev -> {
+            niv2.setOnAction(ev -> { modeIA=true; niveauIA=2; lancerJeuUI(); });
+            niv3.setOnAction(ev -> {
                 Alert a = new Alert(AlertType.INFORMATION,
                         "Le niveau avancé n'est pas encore disponible.");
                 a.showAndWait();
             });
-            choix.getChildren().addAll(niv1, niv2);
+            choix.getChildren().addAll(niv1, niv2,niv3);
             primaryStage.setScene(new Scene(choix, 530, 400));
         });
 
@@ -92,7 +95,7 @@ public class GomokuApp extends Application {
             int[] res = LancerJeu.jouerCoup(etat, row, col);
             drawStone(row, col);
             if (res[0] == 1) {
-                showAlert("Victoire ! Joueur " + etat.getJoueurActuel());
+                showAlert("Victoire ! Joueur " + etat.getJoueurActuelCouleur(etat.getJoueurActuel()));
                 return;
             } else if (res[0] == 0) {
                 showAlert("Match nul !");
@@ -109,22 +112,22 @@ public class GomokuApp extends Application {
 //                });
 //            }
 
-
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
-            pause.setOnFinished(evt -> {
-                // Coup de l'IA
-                int[] m = LancerJeu.jouerCoupIA(etat, niveauIA);
-                int[] res2 = LancerJeu.jouerCoup(etat, m[0], m[1]);
-                drawStone(m[0], m[1]);
-                // On reporte la boîte de dialogue sur la file d'attente JavaFX
-                Platform.runLater(() -> {
-                    if (res2[0] == 1) showAlert("Victoire IA !");
-                    else if (res2[0] == 0) showAlert("Match nul !");
+            if (modeIA && etat.getJoueurActuel()=='O') {
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                pause.setOnFinished(evt -> {
+                    // Coup de l'IA
+                    int[] m = LancerJeu.jouerCoupIA(etat, niveauIA);
+                    int[] res2 = LancerJeu.jouerCoup(etat, m[0], m[1]);
+                    drawStone(m[0], m[1]);
+                    // On reporte la boîte de dialogue sur la file d'attente JavaFX
+                    Platform.runLater(() -> {
+                        if (res2[0] == 1) showAlert("Victoire IA !");
+                        else if (res2[0] == 0) showAlert("Match nul !");
+                    });
                 });
-            });
-            pause.play();
+                pause.play();
 
-
+            }
         });
 
         Button btnR = new Button("Recommencer");
@@ -170,8 +173,14 @@ public class GomokuApp extends Application {
     }
 
     private void showAlert(String msg) {
-        new Alert(AlertType.INFORMATION, msg).showAndWait();
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
+
 
     public static void main(String[] args) {
         launch(args);

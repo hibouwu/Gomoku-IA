@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class EtatDuJeu {
     // Taille du plateau
@@ -35,6 +37,15 @@ public class EtatDuJeu {
         }
     }
 
+    public String getJoueurActuelCouleur(char joueur){
+        String couleur;
+        if (joueurActuel == 'X') {
+            couleur = "Noir";
+        } else {
+            couleur = "Blanc";
+        }
+        return couleur;
+    }
     // --------------------- Getters & Setters ---------------------
 
     public int getTaillePlateau() {

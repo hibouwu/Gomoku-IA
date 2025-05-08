@@ -1,52 +1,66 @@
-package src;
 
-public class MinMaxBasique {
+
+public class MinMaxAlphaBeta {
 
     /**
-     * Trouve le meilleur coup à jouer pour l'IA en utilisant l'algorithme Minimax.
-     * @param etat L'état actuel du jeu.
-     * @param profondeur La profondeur de recherche de l'algorithme.
-     * @return Un tableau de deux entiers [ligne, colonne] représentant le meilleur coup, ou null si aucun coup n'est possible.
+     * 使用Alpha-Beta剪枝的Minimax算法找到最佳落子位置
+     * @param etat 当前游戏状态
+     * @param profondeur 搜索深度
+     * @return 包含[行,列]的最佳落子位置数组
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int profondeur) {
+        long startTime = System.currentTimeMillis();
+        
         int meilleurScore = Integer.MIN_VALUE;
         int meilleureLigne = -1;
         int meilleureColonne = -1;
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
+        
+        // Alpha-Beta参数
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
 
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (plateau[i][j] == '.') {
-                    plateau[i][j] = 'O'; // Supposer que l'IA est 'O'
-                    int score = minimax(etat, profondeur, false); // Commencer par minimiser (tour de l'adversaire)
-                    plateau[i][j] = '.'; // Annuler le coup
-
+                    plateau[i][j] = 'O'; // 假设AI是'O'
+                    int score = alphaBeta(etat, profondeur, alpha, beta, false); // 从最小化开始（对手回合）
+                    plateau[i][j] = '.'; // 撤销走子
+                    
                     if (score > meilleurScore) {
                         meilleurScore = score;
                         meilleureLigne = i;
                         meilleureColonne = j;
+                        
+                        // 更新Alpha值
+                        alpha = Math.max(alpha, meilleurScore);
                     }
                 }
             }
         }
+        
+        long endTime = System.currentTimeMillis();
+        System.out.println("Alpha-Beta recherche: " + (endTime - startTime) + " ms");
 
         if (meilleureLigne != -1) {
             return new int[]{meilleureLigne, meilleureColonne};
         } else {
-            return null; // Aucun coup possible
+            return null; // 没有可能的走法
         }
     }
 
     /**
-     * Fonction récursive Minimax.
-     * @param etat L'état du jeu.
-     * @param profondeur La profondeur restante.
-     * @param estMaximisant true si c'est le tour du joueur maximisant (IA), false sinon.
-     * @return Le score de la branche explorée.
+     * Alpha-Beta剪枝算法的递归实现
+     * @param etat 当前游戏状态
+     * @param profondeur 剩余搜索深度
+     * @param alpha Alpha值
+     * @param beta Beta值
+     * @param estMaximisant 是否为最大化玩家回合（AI）
+     * @return 搜索分支的评分
      */
-    private int minimax(EtatDuJeu etat, int profondeur, boolean estMaximisant) {
-        // Condition d'arrêt: profondeur atteinte, victoire détectée, ou plateau plein
+    private int alphaBeta(EtatDuJeu etat, int profondeur, int alpha, int beta, boolean estMaximisant) {
+        // 终止条件：达到深度、检测到胜利或棋盘已满
         if (profondeur == 0 || LancerJeu.verifierVictoire(etat, -1, -1) || LancerJeu.estPlateauPlein(etat)) {
             return evaluerPosition(etat);
         }
@@ -54,35 +68,59 @@ public class MinMaxBasique {
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
 
-        if (estMaximisant) { // Tour de l'IA ('O')
+        if (estMaximisant) { // AI回合 ('O')
             int meilleurScore = Integer.MIN_VALUE;
             for (int i = 0; i < taille; i++) {
                 for (int j = 0; j < taille; j++) {
                     if (plateau[i][j] == '.') {
                         plateau[i][j] = 'O';
-                        char joueurPrecedent = etat.getJoueurActuel(); // Sauvegarder l'état
+                        char joueurPrecedent = etat.getJoueurActuel(); // 保存状态
                         etat.setJoueurActuel('X');
-                        int score = minimax(etat, profondeur - 1, false);
-                        plateau[i][j] = '.'; // Annuler le coup
-                        etat.setJoueurActuel(joueurPrecedent); // Restaurer l'état
+                        int score = alphaBeta(etat, profondeur - 1, alpha, beta, false);
+                        plateau[i][j] = '.'; // 撤销走子
+                        etat.setJoueurActuel(joueurPrecedent); // 恢复状态
+                        
                         meilleurScore = Math.max(score, meilleurScore);
+                        alpha = Math.max(alpha, meilleurScore);
+                        
+                        // Alpha-Beta剪枝
+                        if (beta <= alpha) {
+                            break; // Beta剪枝
+                        }
                     }
+                }
+                
+                // 如果已经触发剪枝，则退出外层循环
+                if (beta <= alpha) {
+                    break;
                 }
             }
             return meilleurScore;
-        } else { // Tour de l'adversaire ('X')
+        } else { // 对手回合 ('X')
             int meilleurScore = Integer.MAX_VALUE;
             for (int i = 0; i < taille; i++) {
                 for (int j = 0; j < taille; j++) {
                     if (plateau[i][j] == '.') {
                         plateau[i][j] = 'X';
-                        char joueurPrecedent = etat.getJoueurActuel(); // Sauvegarder l'état
+                        char joueurPrecedent = etat.getJoueurActuel(); // 保存状态
                         etat.setJoueurActuel('O');
-                        int score = minimax(etat, profondeur - 1, true);
-                        plateau[i][j] = '.'; // Annuler le coup
-                        etat.setJoueurActuel(joueurPrecedent); // Restaurer l'état
+                        int score = alphaBeta(etat, profondeur - 1, alpha, beta, true);
+                        plateau[i][j] = '.'; // 撤销走子
+                        etat.setJoueurActuel(joueurPrecedent); // 恢复状态
+                        
                         meilleurScore = Math.min(score, meilleurScore);
+                        beta = Math.min(beta, meilleurScore);
+                        
+                        // Alpha-Beta剪枝
+                        if (beta <= alpha) {
+                            break; // Alpha剪枝
+                        }
                     }
+                }
+                
+                // 如果已经触发剪枝，则退出外层循环
+                if (beta <= alpha) {
+                    break;
                 }
             }
             return meilleurScore;
@@ -162,4 +200,4 @@ public class MinMaxBasique {
 
         return 0; // Séquence bloquée ou vide
     }
-}
+} 

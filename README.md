@@ -66,3 +66,36 @@ java -cp bin LancerUnJeu
 ## Licence
 
 Ce projet est distribué sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+
+## Résultats
+
+
+joueur 1 : IA Simple
+joueur 2 : IA MinMax
+joueur 3 : IA Alpha-Beta
+joueur 4 : IA MCTS
+
+joueur 1 vs joueur 2:
+IA Simple (X): 25 victoires
+IA MinMax (O): 0 victoires
+
+joueur 2 vs joueur 1
+IA MinMax (X): 0 victoires
+IA Simple (O): 25 victoires
+
+joueur 1 vs joueur 3
+IA Simple (X): 25 victoires
+IA Alpha-Beta (O): 0 victoires
+
+joueur 3 vs joueur 1
+IA Alpha-Beta (X): 0 victoires
+IA Simple (O): 25 victoires
+
+joueur 1 vs joueur 4
+IA Simple (X): 0 victoires
+IA MCTS (O): 25 victoires
+
+joueur 4 vs joueur 1
+IA MCTS (X): 25 victoires
+IA Simple (O): 0 victoires

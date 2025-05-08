@@ -67,7 +67,7 @@ public class LancerJeu {
     }
     /** Délègue à l'IA selon le niveau choisi. */
     /**
-     * @param niveau 1 = simple, 2 = MinMax basique, 3 = MinMax+αβ
+     * @param niveau 1 = simple, 2 = MinMax basique, 3 = MinMax+αβ, 4 = MCTS
      */
     public static int[] jouerCoupIA(EtatDuJeu etat, int niveau) {
         switch (niveau) {
@@ -76,7 +76,9 @@ public class LancerJeu {
             case 2:
                 return new MinMaxBasique().trouverMeilleurCoup(etat, 1);
             case 3:
-                return new MinMaxAlphaBeta().trouverMeilleurCoup(etat, 1);
+                return new MinMaxAlphaBeta().trouverMeilleurCoup(etat, 2);
+            case 4:
+                return new MCTS().trouverMeilleurCoup(etat, 2000); // 2000ms (2秒)的时间限制
             default:
                 throw new IllegalArgumentException("Niveau IA invalide : " + niveau);
         }
@@ -342,6 +344,7 @@ public class LancerJeu {
             case 1: return "IA Simple";
             case 2: return "IA MinMax";
             case 3: return "IA Alpha-Beta";
+            case 4: return "IA MCTS";
             default: return "IA Inconnue";
         }
     }

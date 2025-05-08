@@ -1,0 +1,30 @@
+Résultats du tournoi entre IA Alpha-Beta (X) et IA MinMax (O)
+Nombre de parties: 1
+==========================================
+
+Partie 1:
+Tour de IA Alpha-Beta (X)... Joue: 8,8 (temps: 4ms)
+Tour de IA MinMax (O)... Joue: 5,5 (temps: 384ms)
+Tour de IA Alpha-Beta (X)... Joue: 5,6 (temps: 1312ms)
+Tour de IA MinMax (O)... Joue: 6,5 (temps: 272ms)
+Tour de IA Alpha-Beta (X)... Joue: 4,5 (temps: 791ms)
+Tour de IA MinMax (O)... Joue: 6,7 (temps: 308ms)
+Tour de IA Alpha-Beta (X)... Joue: 6,6 (temps: 667ms)
+Tour de IA MinMax (O)... Joue: 7,6 (temps: 176ms)
+Tour de IA Alpha-Beta (X)... Joue: 8,5 (temps: 587ms)
+Tour de IA MinMax (O)... Joue: 8,7 (temps: 184ms)
+Tour de IA Alpha-Beta (X)... Joue: 9,8 (temps: 395ms)
+Tour de IA MinMax (O)... Joue: 7,7 (temps: 205ms)
+Tour de IA Alpha-Beta (X)... Joue: 9,7 (temps: 432ms)
+Tour de IA MinMax (O)... Joue: 5,4 (temps: 172ms)
+Tour de IA Alpha-Beta (X)... Joue: 5,7 (temps: 1966ms)
+Tour de IA MinMax (O)... Joue: 4,3 (temps: 212ms)
+Victoire de IA Alpha-Beta (X)!
+Nombre de coups: IA Alpha-Beta=8, IA MinMax=8
+
+==========================================
+Résultats finaux:
+IA Alpha-Beta (X): 1 victoires
+IA MinMax (O): 0 victoires
+Matchs nuls: 0
+Temps moyen par coup: IA Alpha-Beta=769ms, IA MinMax=239ms

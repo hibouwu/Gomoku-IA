@@ -2,6 +2,11 @@
 
 public class MinMaxAlphaBeta {
 
+    // 添加超时控制
+    private long startTime;
+    private long timeLimit = 5000; // 5秒超时限制
+    private boolean timeOut = false;
+
     /**
      * 使用Alpha-Beta剪枝的Minimax算法找到最佳落子位置
      * @param etat 当前游戏状态
@@ -9,7 +14,27 @@ public class MinMaxAlphaBeta {
      * @return 包含[行,列]的最佳落子位置数组
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int profondeur) {
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
+        timeOut = false;
+        
+        // 检查是否是空棋盘(第一步)
+        boolean estPremierCoup = true;
+        for (int i = 0; i < etat.getTaillePlateau(); i++) {
+            for (int j = 0; j < etat.getTaillePlateau(); j++) {
+                if (etat.getPlateau()[i][j] != '.') {
+                    estPremierCoup = false;
+                    break;
+                }
+            }
+            if (!estPremierCoup) break;
+        }
+        
+        // 如果是第一步，直接返回中心位置
+        if (estPremierCoup) {
+            int centre = etat.getTaillePlateau() / 2;
+            System.out.println("Alpha-Beta: Premier coup, je joue directement au centre (" + (centre+1) + "," + (centre+1) + ")");
+            return new int[]{centre, centre};
+        }
         
         int meilleurScore = Integer.MIN_VALUE;
         int meilleureLigne = -1;
@@ -21,21 +46,31 @@ public class MinMaxAlphaBeta {
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
 
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                if (plateau[i][j] == '.') {
-                    plateau[i][j] = 'O'; // 假设AI是'O'
-                    int score = alphaBeta(etat, profondeur, alpha, beta, false); // 从最小化开始（对手回合）
-                    plateau[i][j] = '.'; // 撤销走子
+        // 优先检查中心区域
+        int[][] positions = getOrderedPositions(etat);
+        
+        for (int[] pos : positions) {
+            int i = pos[0];
+            int j = pos[1];
+            
+            if (plateau[i][j] == '.') {
+                plateau[i][j] = 'O'; // 假设AI是'O'
+                int score = alphaBeta(etat, profondeur, alpha, beta, false); // 从最小化开始（对手回合）
+                plateau[i][j] = '.'; // 撤销走子
+                
+                if (score > meilleurScore) {
+                    meilleurScore = score;
+                    meilleureLigne = i;
+                    meilleureColonne = j;
                     
-                    if (score > meilleurScore) {
-                        meilleurScore = score;
-                        meilleureLigne = i;
-                        meilleureColonne = j;
-                        
-                        // 更新Alpha值
-                        alpha = Math.max(alpha, meilleurScore);
-                    }
+                    // 更新Alpha值
+                    alpha = Math.max(alpha, meilleurScore);
+                }
+                
+                // 检查是否超时
+                if (timeOut) {
+                    System.out.println("Alpha-Beta: Timeout - recherche interrompue");
+                    break;
                 }
             }
         }
@@ -46,8 +81,42 @@ public class MinMaxAlphaBeta {
         if (meilleureLigne != -1) {
             return new int[]{meilleureLigne, meilleureColonne};
         } else {
-            return null; // 没有可能的走法
+            // 如果超时或其他原因，返回一个有效的随机走法
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                    if (plateau[i][j] == '.') {
+                        return new int[]{i, j};
+                    }
+                }
+            }
+            return null; // 这不应该发生
         }
+    }
+    
+    /**
+     * 获取按优先级排序的位置列表
+     * 优先中心位置，然后向外扩展
+     */
+    private int[][] getOrderedPositions(EtatDuJeu etat) {
+        int taille = etat.getTaillePlateau();
+        int centre = taille / 2;
+        int[][] positions = new int[taille * taille][2];
+        
+        // 按照到中心的曼哈顿距离排序
+        int index = 0;
+        for (int dist = 0; dist <= taille; dist++) {
+            for (int i = 0; i < taille; i++) {
+                for (int j = 0; j < taille; j++) {
+                    if (Math.abs(i - centre) + Math.abs(j - centre) == dist) {
+                        positions[index][0] = i;
+                        positions[index][1] = j;
+                        index++;
+                    }
+                }
+            }
+        }
+        
+        return positions;
     }
 
     /**
@@ -60,6 +129,12 @@ public class MinMaxAlphaBeta {
      * @return 搜索分支的评分
      */
     private int alphaBeta(EtatDuJeu etat, int profondeur, int alpha, int beta, boolean estMaximisant) {
+        // 检查是否超时
+        if (System.currentTimeMillis() - startTime > timeLimit) {
+            timeOut = true;
+            return 0; // 返回中性分数
+        }
+        
         // 终止条件：达到深度、检测到胜利或棋盘已满
         if (profondeur == 0 || LancerJeu.verifierVictoire(etat, -1, -1) || LancerJeu.estPlateauPlein(etat)) {
             return evaluerPosition(etat);
@@ -84,14 +159,14 @@ public class MinMaxAlphaBeta {
                         alpha = Math.max(alpha, meilleurScore);
                         
                         // Alpha-Beta剪枝
-                        if (beta <= alpha) {
+                        if (beta <= alpha || timeOut) {
                             break; // Beta剪枝
                         }
                     }
                 }
                 
-                // 如果已经触发剪枝，则退出外层循环
-                if (beta <= alpha) {
+                // 如果已经触发剪枝或超时，则退出外层循环
+                if (beta <= alpha || timeOut) {
                     break;
                 }
             }
@@ -112,14 +187,14 @@ public class MinMaxAlphaBeta {
                         beta = Math.min(beta, meilleurScore);
                         
                         // Alpha-Beta剪枝
-                        if (beta <= alpha) {
+                        if (beta <= alpha || timeOut) {
                             break; // Alpha剪枝
                         }
                     }
                 }
                 
-                // 如果已经触发剪枝，则退出外层循环
-                if (beta <= alpha) {
+                // 如果已经触发剪枝或超时，则退出外层循环
+                if (beta <= alpha || timeOut) {
                     break;
                 }
             }

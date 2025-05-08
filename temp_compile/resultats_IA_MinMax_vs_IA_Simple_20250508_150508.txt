@@ -1,0 +1,335 @@
+Résultats du tournoi entre IA MinMax (X) et IA Simple (O)
+Nombre de parties: 25
+==========================================
+
+Partie 1:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 417ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 1ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 283ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 205ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 368ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 230ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 2:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 194ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 182ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 3:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 188ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 171ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 4:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 1ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 183ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 179ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 186ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 5:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 179ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 175ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 6:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 191ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 174ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 7:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 190ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 190ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 180ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 171ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 8:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 182ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 181ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 183ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 171ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 9:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 169ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 10:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 171ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 11:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 174ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 12:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 184ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 181ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 177ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 13:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 169ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 14:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 183ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 1ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 184ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 171ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 15:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 181ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 185ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 169ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 16:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 170ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 17:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 183ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 175ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 18:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 175ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 19:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 172ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 185ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 20:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 195ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 171ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 175ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 21:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 182ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 169ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 22:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 173ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 170ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 23:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 176ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 173ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 24:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 178ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 175ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 179ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 173ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+Partie 25:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 174ms)
+Tour de IA Simple (O)... Joue: 1,1 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,6 (temps: 177ms)
+Tour de IA Simple (O)... Joue: 5,2 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,7 (temps: 184ms)
+Tour de IA Simple (O)... Joue: 5,3 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,8 (temps: 180ms)
+Tour de IA Simple (O)... Joue: 5,4 (temps: 0ms)
+Tour de IA MinMax (X)... Joue: 5,9 (temps: 174ms)
+Victoire de IA Simple (O)!
+Nombre de coups: IA MinMax=5, IA Simple=4
+
+==========================================
+Résultats finaux:
+IA MinMax (X): 0 victoires
+IA Simple (O): 25 victoires
+Matchs nuls: 0
+Temps moyen par coup: IA MinMax=181ms, IA Simple=0ms

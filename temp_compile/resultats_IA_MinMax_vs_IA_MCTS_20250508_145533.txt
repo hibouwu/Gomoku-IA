@@ -1,0 +1,79 @@
+Résultats du tournoi entre IA MinMax (X) et IA MCTS (O)
+Nombre de parties: 5
+==========================================
+
+Partie 1:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 364ms)
+Tour de IA MCTS (O)... Joue: 2,2 (temps: 47ms)
+Tour de IA MinMax (X)... Joue: 2,5 (temps: 311ms)
+Tour de IA MCTS (O)... Joue: 5,8 (temps: 17ms)
+Tour de IA MinMax (X)... Joue: 4,5 (temps: 196ms)
+Tour de IA MCTS (O)... Joue: 14,4 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 3,5 (temps: 252ms)
+Tour de IA MCTS (O)... Joue: 10,8 (temps: 24ms)
+Tour de IA MinMax (X)... Joue: 6,5 (temps: 328ms)
+Victoire de IA MCTS (O)!
+Nombre de coups: IA MinMax=5, IA MCTS=4
+
+Partie 2:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 188ms)
+Tour de IA MCTS (O)... Joue: 2,2 (temps: 20ms)
+Tour de IA MinMax (X)... Joue: 2,5 (temps: 194ms)
+Tour de IA MCTS (O)... Joue: 14,2 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 4,5 (temps: 184ms)
+Tour de IA MCTS (O)... Joue: 13,4 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 3,5 (temps: 180ms)
+Tour de IA MCTS (O)... Joue: 14,4 (temps: 8ms)
+Tour de IA MinMax (X)... Joue: 6,5 (temps: 187ms)
+Victoire de IA MCTS (O)!
+Nombre de coups: IA MinMax=5, IA MCTS=4
+
+Partie 3:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 184ms)
+Tour de IA MCTS (O)... Joue: 8,12 (temps: 20ms)
+Tour de IA MinMax (X)... Joue: 7,11 (temps: 180ms)
+Tour de IA MCTS (O)... Joue: 5,6 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 6,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 6,11 (temps: 20ms)
+Tour de IA MinMax (X)... Joue: 4,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 12,1 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 7,5 (temps: 178ms)
+Tour de IA MCTS (O)... Joue: 4,4 (temps: 12ms)
+Tour de IA MinMax (X)... Joue: 8,5 (temps: 180ms)
+Victoire de IA MCTS (O)!
+Nombre de coups: IA MinMax=6, IA MCTS=5
+
+Partie 4:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 184ms)
+Tour de IA MCTS (O)... Joue: 1,2 (temps: 20ms)
+Tour de IA MinMax (X)... Joue: 1,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 6,9 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 2,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 7,14 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 4,5 (temps: 172ms)
+Tour de IA MCTS (O)... Joue: 13,8 (temps: 11ms)
+Tour de IA MinMax (X)... Joue: 3,5 (temps: 176ms)
+Victoire de IA MCTS (O)!
+Nombre de coups: IA MinMax=5, IA MCTS=4
+
+Partie 5:
+Tour de IA MinMax (X)... Joue: 5,5 (temps: 192ms)
+Tour de IA MCTS (O)... Joue: 13,1 (temps: 12ms)
+Tour de IA MinMax (X)... Joue: 11,1 (temps: 180ms)
+Tour de IA MCTS (O)... Joue: 7,3 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 9,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 1,13 (temps: 15ms)
+Tour de IA MinMax (X)... Joue: 7,5 (temps: 216ms)
+Tour de IA MCTS (O)... Joue: 2,14 (temps: 16ms)
+Tour de IA MinMax (X)... Joue: 6,5 (temps: 176ms)
+Tour de IA MCTS (O)... Joue: 4,2 (temps: 8ms)
+Tour de IA MinMax (X)... Joue: 8,5 (temps: 180ms)
+Victoire de IA MCTS (O)!
+Nombre de coups: IA MinMax=6, IA MCTS=5
+
+==========================================
+Résultats finaux:
+IA MinMax (X): 0 victoires
+IA MCTS (O): 5 victoires
+Matchs nuls: 0
+Temps moyen par coup: IA MinMax=202ms, IA MCTS=17ms

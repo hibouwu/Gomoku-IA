@@ -1,4 +1,3 @@
-package src;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
@@ -85,7 +84,9 @@ public class GomokuApp extends Application {
         primaryStage.setTitle("Menu Gomoku");
         primaryStage.show();
     }
-
+    /**
+     * créer l'interface graphique du menu
+     */
     private Scene creerSceneMenu() {
         VBox menuBox = new VBox(20);
         menuBox.setStyle("-fx-alignment:center; -fx-padding:50; "
@@ -491,7 +492,10 @@ public class GomokuApp extends Application {
         
         iaTimer.play();
     }
-
+    /**
+     * Initialise l'interface graphique du plateau
+     *
+     */
     private void drawBoard() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BEIGE);
@@ -504,7 +508,9 @@ public class GomokuApp extends Application {
                     MARGE+i*TAILLE_CASE, MARGE+(TAILLE_PLATEAU-1)*TAILLE_CASE);
         }
     }
-
+    /**
+     * Initialise l'interface graphique des pions
+     */
     private void drawStone(int row, int col) {
         GraphicsContext g = canvas.getGraphicsContext2D();
         double x = MARGE + col*TAILLE_CASE,
@@ -514,7 +520,9 @@ public class GomokuApp extends Application {
         g.fillOval(x-r, y-r, r*2, r*2);
         g.strokeOval(x-r, y-r, r*2, r*2);
     }
-
+    /**
+     * création du pop up d'information
+     */
     private void showAlert(String msg) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("");

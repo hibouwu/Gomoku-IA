@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Classe abstraite définissant le comportement d'un joueur dans le jeu de Gomoku.
@@ -20,7 +19,7 @@ public abstract class Joueur {
     // Symbole utilisé par le joueur (ex: 'X' ou 'O')
     private char symbole;
 
-    // Score du joueur (optionnel, selon vos besoins)
+    // Score du joueur
     private int score;
 
     /**

@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Implémentation basique de l'algorithme Minimax pour le jeu de Gomoku.
@@ -164,7 +163,6 @@ public class MinMaxBasique extends Joueur {
      * @return Le score de la séquence
      */
     private int evaluerSequence(char c1, char c2, char c3, char c4, char c5) {
-        int score = 0;
         int countO = 0;
         int countX = 0;
         char[] sequence = {c1, c2, c3, c4, c5};

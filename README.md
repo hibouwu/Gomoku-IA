@@ -4,7 +4,7 @@ C'est un projet réalisé dans le cadre de l'UE Intelligence Artificielle, à r�
 
 ## Contexte
 
-Dans ce projet, vous devez implémenter au moins trois niveaux d'IA, allant d'une stratégie simple à une stratégie optimale. Pour y parvenir, vous utiliserez notamment :
+Dans ce projet, quatres niveaux d'IA sont implémentés, allant d'une stratégie simple à une stratégie optimale. Pour y parvenir, nous avons utilisé notamment :
 
 - L'algorithme Minimax basique
 - L'amélioration de Minimax par élagage αβ
@@ -20,6 +20,7 @@ Une fois les IA implémentées, des tournois seront organisés (au moins 50 part
   - **Niveau 1** : Stratégie simple (basique)
   - **Niveau 2** : Stratégie intermédiaire utilisant l'algorithme Minimax
   - **Niveau 3** : Stratégie optimale avec élagage αβ
+  - **Niveau 4** : Stratégie optimale avec MCTS
 
 ## Wiki
 

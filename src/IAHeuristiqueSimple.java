@@ -1,22 +1,22 @@
-package src;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Implémentation d'une IA basée sur des heuristiques simples pour le jeu de Gomoku.
- * 
+ *
  * Cette classe utilise une approche heuristique basique pour :
  * - Évaluer les positions sur le plateau
  * - Identifier les formations de pions
  * - Choisir le meilleur coup à jouer
- * 
+ *
  * Caractéristiques :
  * - Utilise des règles simples pour évaluer les positions
  * - Considère les alignements de pions
  * - Prend en compte la position centrale
  * - Implémente une stratégie défensive basique
- * 
+ *
  * Cette IA est plus simple que les versions MinMax et MCTS,
  * mais peut servir de base pour des implémentations plus avancées.
  */
@@ -48,6 +48,8 @@ public class IAHeuristiqueSimple extends Joueur {
             for (int j = 0; j < taille; j++) {
                 if (plateau[i][j] == '.') {
                     int score = evaluerPosition(etat, i, j);
+                    // Facteur aléatoire pour départager
+                    score += new Random().nextInt(20);
                     if (score > meilleurScore) {
                         meilleurScore = score;
                         meilleureLigne = i;

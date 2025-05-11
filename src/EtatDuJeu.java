@@ -3,6 +3,21 @@ package src;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Représente l'état actuel d'une partie de Gomoku.
+ * 
+ * Cette classe maintient :
+ * - Le plateau de jeu (grille)
+ * - Le joueur actuel
+ * - L'état de fin de partie
+ * - La taille du plateau
+ * 
+ * Elle fournit les méthodes pour :
+ * - Accéder et modifier l'état du jeu
+ * - Vérifier la validité des coups
+ * - Gérer le changement de joueur
+ * - Contrôler l'état de fin de partie
+ */
 public class EtatDuJeu {
     // Taille du plateau
     private int taillePlateau;

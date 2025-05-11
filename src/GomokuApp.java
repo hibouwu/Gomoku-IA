@@ -23,6 +23,25 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Application principale de Gomoku avec interface graphique.
+ * 
+ * Cette classe implémente l'interface graphique du jeu en utilisant JavaFX :
+ * - Gestion de la fenêtre principale
+ * - Affichage du plateau de jeu
+ * - Interaction avec les joueurs
+ * - Configuration des parties
+ * 
+ * Fonctionnalités :
+ * - Interface graphique moderne et intuitive
+ * - Support des joueurs humains et IA
+ * - Options de configuration du jeu
+ * - Affichage des statistiques
+ * - Gestion des événements utilisateur
+ * 
+ * Cette classe est le point d'entrée principal de l'application
+ * et gère toute l'interface utilisateur.
+ */
 public class GomokuApp extends Application {
 
     private final int taille = 15;
@@ -40,7 +59,6 @@ public class GomokuApp extends Application {
     private boolean tournoiEnCours = false;
     private PauseTransition iaTimer;
     
-    // 新增：轮数相关
     private int currentRound = 0;
     private int totalRounds = 1;
     private int ia1Victories = 0;
@@ -118,7 +136,7 @@ public class GomokuApp extends Application {
             cbIA2.getItems().addAll("IA Simple", "IA MinMax", "IA Alpha-Beta", "IA MCTS");
             cbIA2.setValue("IA Simple");
             
-            // 添加轮数选择滑块
+            // Ajout du slider pour le nombre de parties de deux IA
             Slider sliderRounds = new Slider(1, 50, 1);
             sliderRounds.setShowTickMarks(true);
             sliderRounds.setShowTickLabels(true);
@@ -176,18 +194,18 @@ public class GomokuApp extends Application {
         drawBoard();
         tournoiEnCours = false;
         
-        // 创建信息显示区域
+        // créer la zone d'affichage des informations
         infoTextArea = new TextArea();
         infoTextArea.setPrefWidth(250);
         infoTextArea.setEditable(false);
         infoTextArea.setWrapText(true);
         updateInfoPanel();
 
-        // 人类点击棋盘的事件
+        // événement de clic sur le plateau
         canvas.setOnMouseClicked(e -> {
             if (etat.estFinDuJeu() || tournoiEnCours) return;
             if (modeIA && etat.getJoueurActuel()=='O') return;
-            if (modeIAvsIA) return; // 如果是AI vs AI模式，人类不能下棋
+            if (modeIAvsIA) return; // si le mode est AI vs AI, les humains ne peuvent pas jouer
 
             double x = e.getX() - marge, y = e.getY() - marge;
             int col = (int)Math.round(x/ tailleCase),
@@ -225,7 +243,7 @@ public class GomokuApp extends Application {
             }
         });
 
-        // 按钮区域
+        // zone des boutons
         Button btnR = new Button("Recommencer");
         Button btnM = new Button("Retour au menu");
         Button btnS = null;
@@ -277,7 +295,7 @@ public class GomokuApp extends Application {
         
         h.setStyle("-fx-alignment:center;");
 
-        // 使用BorderPane布局，在右侧添加信息面板
+        // utiliser BorderPane pour placer le plateau au centre et l'infoTextArea à droite
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(new HBox(canvas));
         
@@ -292,7 +310,7 @@ public class GomokuApp extends Application {
         primaryStage.setScene(new Scene(root, 850, root.getPrefHeight()));
     }
     
-    // 更新信息面板
+    // mettre à jour le panneau d'informations
     private void updateInfoPanel() {
         if (infoTextArea == null) return;
         
@@ -323,7 +341,7 @@ public class GomokuApp extends Application {
         infoTextArea.setText(sb.toString());
     }
     
-    // 开始下一轮比赛
+    // commencer la prochaine partie
     private void startNextRound() {
         if (!tournoiEnCours) return;
         
@@ -333,21 +351,21 @@ public class GomokuApp extends Application {
             return;
         }
         
-        // 重置棋盘
+        // réinitialiser le plateau
         etat = new EtatDuJeu(taille);
         etat.setJoueurActuel('X');
         drawBoard();
         updateInfoPanel();
         
-        // 开始AI对战
+        // commencer la partie IA vs IA
         jouerPartieIAvsIA();
     }
     
-    // 显示最终结果
+    // afficher les résultats finaux
     private void showFinalResults() {
         tournoiEnCours = false;
         
-        // 找到按钮并更新文本
+        // trouver le bouton et mettre à jour le texte
         Scene scene = primaryStage.getScene();
         if (scene.getRoot() instanceof VBox) {
             VBox root = (VBox) scene.getRoot();
@@ -360,7 +378,7 @@ public class GomokuApp extends Application {
             }
         }
         
-        // 创建最终结果报告
+        // créer le rapport des résultats finaux
         StringBuilder results = new StringBuilder();
         results.append("===== RÉSULTATS FINAUX =====\n\n");
         results.append("IA 1 (X): ").append(LancerJeu.getNomIA(niveauIA1)).append("\n");
@@ -373,7 +391,7 @@ public class GomokuApp extends Application {
         results.append("Matchs nuls: ").append(draws).append(" (")
                 .append(String.format("%.1f%%", (double) draws / totalRounds * 100)).append(")\n\n");
         
-        // 确定胜者
+        // déterminer le gagnant
         String winner;
         if (ia1Victories > ia2Victories) {
             winner = "IA 1 (" + LancerJeu.getNomIA(niveauIA1) + ")";
@@ -385,7 +403,7 @@ public class GomokuApp extends Application {
         
         results.append("GAGNANT FINAL: ").append(winner);
         
-        // 显示结果
+        // afficher les résultats
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Résultats du tournoi");
         alert.setHeaderText("Tournoi terminé!");
@@ -393,28 +411,28 @@ public class GomokuApp extends Application {
         alert.showAndWait();
     }
     
-    // AI vs AI对战逻辑
+    // logique de la partie IA vs IA
     private void jouerPartieIAvsIA() {
         if (!tournoiEnCours || etat.estFinDuJeu()) return;
         
-        // 确定当前该哪个AI下棋
+        // déterminer lequel des deux IA doit jouer
         int niveauIAActuel = etat.getJoueurActuel() == 'X' ? niveauIA1 : niveauIA2;
         
-        // 创建一个延迟，让UI有时间刷新
+        // créer un délai, permettre à l'UI de mettre à jour
         iaTimer = new PauseTransition(Duration.seconds(0.5));
         iaTimer.setOnFinished(evt -> {
-            // AI落子
+            // AI joue
             int[] m = LancerJeu.jouerCoupIA(etat, niveauIAActuel);
             char currentPlayer = etat.getJoueurActuel(); // 保存当前玩家，用于后续判断
             int[] res = LancerJeu.jouerCoup(etat, m[0], m[1]);
             drawStone(m[0], m[1]);
             
-            // 检查游戏是否结束
+            // vérifier si la partie est terminée
             final boolean gameOver = res[0] >= 0;
             if (gameOver) {
-                // 更新统计信息
+                // mettre à jour les informations statistiques
                 if (res[0] == 1) {
-                    // 当res[0]=1时，表示当前玩家（刚刚落子的玩家）获胜
+                    // lorsque res[0]=1, indique que le joueur actuel a gagné
                     if (currentPlayer == 'X') {
                         ia1Victories++;
                     } else {
@@ -424,14 +442,14 @@ public class GomokuApp extends Application {
                     String winner = currentPlayer == 'X' ? "IA 1 (X)" : "IA 2 (O)";
                     updateInfoPanel();
                     
-                    // 使用Platform.runLater将对话框显示移到主UI线程
+                    // utiliser Platform.runLater pour déplacer l'affichage de la boîte de dialogue sur la file d'attente JavaFX
                     if (currentRound == totalRounds) {
                         Platform.runLater(() -> {
                             showAlert("Victoire de " + winner + " !");
-                            startNextRound(); // 启动下一轮或显示最终结果
+                            startNextRound(); // lancer la prochaine partie ou afficher les résultats finaux
                         });
                     } else {
-                        // 如果不是最后一轮，不显示对话框，直接进入下一轮
+                        // si ce n'est pas la dernière partie, ne pas afficher la boîte de dialogue, passer à la partie suivante
                         Platform.runLater(() -> {
                             startNextRound();
                         });
@@ -443,10 +461,10 @@ public class GomokuApp extends Application {
                     if (currentRound == totalRounds) {
                         Platform.runLater(() -> {
                             showAlert("Match nul !");
-                            startNextRound(); // 启动下一轮或显示最终结果
+                            startNextRound(); // lancer la prochaine partie ou afficher les résultats finaux
                         });
                     } else {
-                        // 如果不是最后一轮，不显示对话框，直接进入下一轮
+                        // si ce n'est pas la dernière partie, ne pas afficher la boîte de dialogue, passer à la partie suivante
                         Platform.runLater(() -> {
                             startNextRound();
                         });
@@ -455,7 +473,7 @@ public class GomokuApp extends Application {
                 return;
             }
             
-            // 如果游戏未结束，继续下一步
+            // si la partie n'est pas terminée, continuer à la prochaine partie
             jouerPartieIAvsIA();
         });
         
@@ -492,9 +510,8 @@ public class GomokuApp extends Application {
         alert.setGraphic(null);
         alert.setContentText(msg);
         
-        // 确保在JavaFX应用程序线程中调用
         if (Platform.isFxApplicationThread()) {
-            alert.showAndWait();
+        alert.showAndWait();
         } else {
             Platform.runLater(() -> alert.showAndWait());
         }

@@ -2,9 +2,27 @@ package src;
 
 import java.util.Scanner;
 
+/**
+ * Classe utilitaire pour gérer la logique de base du jeu de Gomoku.
+ * 
+ * Cette classe fournit des méthodes statiques pour :
+ * - Vérifier les conditions de victoire
+ * - Valider les coups
+ * - Gérer l'état du plateau
+ * - Contrôler le flux du jeu
+ * 
+ * Fonctionnalités principales :
+ * - Détection des alignements gagnants
+ * - Vérification de la validité des coups
+ * - Gestion des tours de jeu
+ * - Contrôle de fin de partie
+ * 
+ * Cette classe est utilisée par toutes les autres classes
+ * pour accéder aux règles de base du jeu.
+ */
 public class LancerJeu {
 
-    /** Vérifie la victoire ; si ligne/colonne = -1, fait une vérification exhaustive (pour Minimax). */
+    /** Vérifie la victoire à partir d'une position donnée */
     public static boolean verifierVictoire(EtatDuJeu etat, int ligne, int colonne) {
         int n = etat.getTaillePlateau();
         char[][] p = etat.getPlateau();
@@ -44,7 +62,7 @@ public class LancerJeu {
         return false;
     }
 
-    /** Retourne true si le plateau est plein. */
+    /** Retourne true si le plateau est plein */
     public static boolean estPlateauPlein(EtatDuJeu etat) {
         char[][] p = etat.getPlateau();
         for (int i = 0; i < etat.getTaillePlateau(); i++) {
@@ -55,44 +73,10 @@ public class LancerJeu {
         return true;
     }
 
-    /** Pose un pion au plateau. */
-    public static void poserPion(EtatDuJeu etat, int ligne, int colonne) {
-        etat.getPlateau()[ligne][colonne] = etat.getJoueurActuel();
-    }
-
-    /** Change X ↔ O. */
-    public static void passerAuJoueurSuivant(EtatDuJeu etat) {
-        char next = etat.getJoueurActuel() == 'X' ? 'O' : 'X';
-        etat.setJoueurActuel(next);
-    }
-    /** Délègue à l'IA selon le niveau choisi. */
-    /**
-     * @param niveau 1 = simple, 2 = MinMax basique, 3 = MinMax+αβ, 4 = MCTS
-     */
-    public static int[] jouerCoupIA(EtatDuJeu etat, int niveau) {
-        switch (niveau) {
-            case 1:
-                return new IAHeuristiqueSimple().trouverMeilleurCoup(etat);
-            case 2:
-                return new MinMaxBasique().trouverMeilleurCoup(etat, 1);
-            case 3:
-                return new MinMaxAlphaBeta().trouverMeilleurCoup(etat, 2);
-            case 4:
-                return new MCTS().trouverMeilleurCoup(etat, 2000); // 2000ms (2秒)的时间限制
-            default:
-                throw new IllegalArgumentException("Niveau IA invalide : " + niveau);
-        }
-    }
-
-
-    /**
-     * Joue un coup et renvoie :
-     *   1 si victoire,
-     *   0 si match nul,
-     *  -1 si la partie continue.
-     */
+    /** Joue un coup et retourne le résultat */
     public static int[] jouerCoup(EtatDuJeu etat, int ligne, int colonne) {
-        poserPion(etat, ligne, colonne);
+        etat.getPlateau()[ligne][colonne] = etat.getJoueurActuel();
+        
         if (verifierVictoire(etat, ligne, colonne)) {
             etat.setFinDuJeu(true);
             return new int[]{1, ligne, colonne};
@@ -101,13 +85,23 @@ public class LancerJeu {
             etat.setFinDuJeu(true);
             return new int[]{0, ligne, colonne};
         }
-        passerAuJoueurSuivant(etat);
+        
+        etat.setJoueurActuel(etat.getJoueurActuel() == 'X' ? 'O' : 'X');
         return new int[]{-1, ligne, colonne};
     }
 
-    /**
-     * Retourne le nom d'une IA selon son niveau
-     */
+    /** Joue un coup pour l'IA selon le niveau choisi */
+    public static int[] jouerCoupIA(EtatDuJeu etat, int niveau) {
+        switch (niveau) {
+            case 1: return new IAHeuristiqueSimple("IA Simple", 'O').trouverMeilleurCoup(etat);
+            case 2: return new MinMaxBasique("IA MinMax", 'O').trouverMeilleurCoup(etat, 1);
+            case 3: return new MinMaxAlphaBeta("IA Alpha-Beta", 'O').trouverMeilleurCoup(etat, 2);
+            case 4: return new MCTS("IA MCTS", 'O').trouverMeilleurCoup(etat, 2000);
+            default: throw new IllegalArgumentException("Niveau IA invalide : " + niveau);
+        }
+    }
+
+    /** Retourne le nom d'une IA selon son niveau */
     public static String getNomIA(int niveau) {
         switch (niveau) {
             case 1: return "IA Simple";

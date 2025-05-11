@@ -8,36 +8,65 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MinMaxAlphaBeta {
+/**
+ * Implémentation de l'algorithme Minimax avec élagage Alpha-Beta pour le jeu de Gomoku.
+ * 
+ * Cette classe utilise l'algorithme Minimax amélioré avec élagage Alpha-Beta pour trouver le meilleur coup à jouer.
+ * L'algorithme combine la recherche en profondeur avec des techniques d'optimisation pour évaluer les positions.
+ * 
+ * Caractéristiques principales :
+ * - Utilise l'élagage Alpha-Beta pour réduire l'espace de recherche
+ * - Implémente une recherche itérative progressive
+ * - Utilise un cache d'évaluation pour éviter les calculs redondants
+ * - Optimise la recherche en triant les coups candidats
+ * - Inclut des heuristiques avancées pour l'évaluation des positions
+ * 
+ * Optimisations :
+ * - Limite de temps pour éviter les dépassements
+ * - Profondeur de recherche maximale configurable
+ * - Mode agressif/défensif ajustable
+ * - Évaluation des formations avec scores pondérés
+ * - Prise en compte de la position centrale
+ */
+public class MinMaxAlphaBeta extends Joueur {
 
-    // 添加超时控制和更好的设置
+    // Contrôle du timeout et meilleurs paramètres
     private long startTime;
-    private long timeLimit = 9000; // 增加到9秒超时限制
+    private long timeLimit = 9000; // Augmentation de la limite de timeout à 9 secondes
     private boolean timeOut = false;
     private Random random = new Random();
-    private int maxSearchDepth = 4; // 最大搜索深度
+    private int maxSearchDepth = 4; // Profondeur de recherche maximale
     private final int WIN_SCORE = 1000000;
-    private final int THREAT_SCORE = 20000; // 增加威胁分数
-    private boolean isAggressive = true; // 更具攻击性的模式
+    private final int THREAT_SCORE = 20000; // Augmentation du score de menace
+    private boolean isAggressive = true; // Mode plus agressif
 
-    // 缓存评估分数，避免重复计算
+    // Cache d'évaluation pour éviter les calculs redondants
     private Map<String, Integer> evaluationCache = new HashMap<>();
 
     /**
-     * 使用Alpha-Beta剪枝的Minimax算法找到最佳落子位置
-     * @param etat 当前游戏状态
-     * @param profondeur 搜索深度
-     * @return 包含[行,列]的最佳落子位置数组
+     * Constructeur de l'IA MinMax avec Alpha-Beta
+     * @param nom Le nom de l'IA
+     * @param symbole Le symbole utilisé par l'IA ('X' ou 'O')
+     */
+    public MinMaxAlphaBeta(String nom, char symbole) {
+        super(nom, symbole);
+    }
+
+    /**
+     * Trouve la meilleure position en utilisant l'algorithme Minimax avec élagage Alpha-Beta
+     * @param etat État actuel du jeu
+     * @param profondeur Profondeur de recherche
+     * @return Tableau contenant [ligne,colonne] de la meilleure position
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int profondeur) {
-        // 清空评估缓存
+        // Vider le cache d'évaluation
         evaluationCache.clear();
         
-        profondeur = Math.min(profondeur, maxSearchDepth); // 限制最大搜索深度
+        profondeur = Math.min(profondeur, maxSearchDepth); // Limiter la profondeur maximale
         startTime = System.currentTimeMillis();
         timeOut = false;
         
-        // 检查是否是空棋盘(第一步)
+        // Vérifier si c'est le premier coup (plateau vide)
         boolean estPremierCoup = true;
         for (int i = 0; i < etat.getTaillePlateau(); i++) {
             for (int j = 0; j < etat.getTaillePlateau(); j++) {
@@ -49,10 +78,10 @@ public class MinMaxAlphaBeta {
             if (!estPremierCoup) break;
         }
         
-        // 如果是第一步，在中心区域随机选择一个点
+        // Si c'est le premier coup, choisir un point aléatoire près du centre
         if (estPremierCoup) {
             int centre = etat.getTaillePlateau() / 2;
-            int offset = random.nextInt(2) - 1; // -1, 0, 或 1
+            int offset = random.nextInt(2) - 1; // -1, 0, ou 1
             int x = centre + offset;
             int y = centre + (offset != 0 ? 0 : (random.nextBoolean() ? 1 : -1));
             System.out.println("Alpha-Beta: Premier coup, je joue près du centre (" + (x+1) + "," + (y+1) + ")");
@@ -65,14 +94,14 @@ public class MinMaxAlphaBeta {
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
         
-        // Alpha-Beta参数
+        // Paramètres Alpha-Beta
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
 
-        // 获取所有候选走法并按启发式得分排序
+        // Obtenir tous les coups candidats et les trier par score heuristique
         List<int[]> candidatMoves = getOrderedMoves(etat);
         
-        // 使用迭代深化搜索，从浅层开始
+        // Utiliser la recherche itérative progressive, en commençant par une profondeur faible
         for (int currentDepth = 2; currentDepth <= profondeur; currentDepth++) {
             if (timeOut) break;
             
@@ -87,13 +116,13 @@ public class MinMaxAlphaBeta {
                 int j = move[1];
                 
                 if (plateau[i][j] == '.') {
-                    plateau[i][j] = 'O'; // 假设AI是'O'
+                    plateau[i][j] = 'O'; // Supposer que l'IA est 'O'
                     char joueurPrecedent = etat.getJoueurActuel();
                     etat.setJoueurActuel('X');
                     
-                    int score = alphaBeta(etat, currentDepth - 1, alpha, beta, false); // 从最小化开始（对手回合）
+                    int score = alphaBeta(etat, currentDepth - 1, alpha, beta, false); // Commencer par la minimisation (tour de l'adversaire)
                     
-                    plateau[i][j] = '.'; // 撤销走子
+                    plateau[i][j] = '.'; // Annuler le coup
                     etat.setJoueurActuel(joueurPrecedent);
                     
                     if (score > currentBestScore) {
@@ -101,31 +130,31 @@ public class MinMaxAlphaBeta {
                         currentBestRow = i;
                         currentBestCol = j;
                         
-                        // 更新Alpha值
+                        // Mettre à jour la valeur Alpha
                         alpha = Math.max(alpha, currentBestScore);
                     }
                     
-                    // 检查是否超时
+                    // Vérifier le timeout
                     if (timeOut) {
-                        System.out.println("Alpha-Beta: Timeout at depth " + currentDepth);
+                        System.out.println("Alpha-Beta: Timeout à la profondeur " + currentDepth);
                         break;
                     }
                     
-                    // 如果找到了必胜走法，立即返回
+                    // Si un coup gagnant est trouvé, le retourner immédiatement
                     if (score >= WIN_SCORE) {
-                        System.out.println("Alpha-Beta: Found winning move at depth " + currentDepth);
+                        System.out.println("Alpha-Beta: Coup gagnant trouvé à la profondeur " + currentDepth);
                         return new int[]{i, j};
                     }
                 }
             }
             
-            // 更新当前深度的最佳走法
+            // Mettre à jour le meilleur coup de la profondeur actuelle
             if (currentBestRow != -1 && !timeOut) {
                 meilleurScore = currentBestScore;
                 meilleureLigne = currentBestRow;
                 meilleureColonne = currentBestCol;
                 
-                // 将最佳走法移到列表前面
+                // Déplacer le meilleur coup au début de la liste
                 for (int i = 0; i < candidatMoves.size(); i++) {
                     int[] move = candidatMoves.get(i);
                     if (move[0] == currentBestRow && move[1] == currentBestCol) {
@@ -145,12 +174,12 @@ public class MinMaxAlphaBeta {
         if (meilleureLigne != -1) {
             return new int[]{meilleureLigne, meilleureColonne};
         } else {
-            // 如果超时或其他原因，返回候选走法中的第一个
+            // Si timeout ou autre raison, retourner le premier coup candidat
             if (!candidatMoves.isEmpty()) {
                 return candidatMoves.get(0);
             }
             
-            // 最后的备选方案，找一个空位
+            // Dernier recours, trouver une case vide
             for (int i = 0; i < taille; i++) {
                 for (int j = 0; j < taille; j++) {
                     if (plateau[i][j] == '.') {
@@ -158,26 +187,26 @@ public class MinMaxAlphaBeta {
                     }
                 }
             }
-            return null; // 这不应该发生
+            return null; // Ne devrait pas arriver
         }
     }
     
     /**
-     * 获取所有候选走法并手动排序
+     * Obtient tous les coups candidats et les trie manuellement
      */
     private List<int[]> getOrderedMoves(EtatDuJeu etat) {
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
         List<int[]> moves = new ArrayList<>();
         
-        // 只考虑已有棋子附近3格内的空位
+        // Ne considérer que les cases vides à 3 cases des pièces existantes
         boolean hasNeighbor = false;
         boolean[][] considered = new boolean[taille][taille];
         
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (plateau[i][j] != '.') {
-                    // 考虑周围3格内的空位
+                    // Considérer les cases vides dans un rayon de 3 cases
                     for (int di = -3; di <= 3; di++) {
                         for (int dj = -3; dj <= 3; dj++) {
                             int ni = i + di;
@@ -194,7 +223,7 @@ public class MinMaxAlphaBeta {
             }
         }
         
-        // 如果棋盘上没有棋子或没有找到合适的位置
+        // Si le plateau est vide ou si aucune position appropriée n'est trouvée
         if (!hasNeighbor) {
             int centre = taille / 2;
             moves.add(new int[]{centre, centre});
@@ -210,28 +239,28 @@ public class MinMaxAlphaBeta {
             }
         }
         
-        // 手动对走法按分数排序
+        // Trier manuellement les coups par score
         List<MoveScore> scoredMoves = new ArrayList<>();
         for (int[] move : moves) {
             int score = evaluateMoveScore(etat, move[0], move[1], 'O');
             scoredMoves.add(new MoveScore(move, score));
         }
         
-        // 稳定排序
+        // Tri stable
         Collections.sort(scoredMoves, new Comparator<MoveScore>() {
             @Override
             public int compare(MoveScore m1, MoveScore m2) {
                 if (m1.score != m2.score) {
-                    return Integer.compare(m2.score, m1.score); // 降序
+                    return Integer.compare(m2.score, m1.score); // Ordre décroissant
                 }
                 if (m1.move[0] != m2.move[0]) {
-                    return Integer.compare(m1.move[0], m2.move[0]); // 行升序
+                    return Integer.compare(m1.move[0], m2.move[0]); // Ordre croissant des lignes
                 }
-                return Integer.compare(m1.move[1], m2.move[1]); // 列升序
+                return Integer.compare(m1.move[1], m2.move[1]); // Ordre croissant des colonnes
             }
         });
         
-        // 提取排序后的走法
+        // Extraire les coups triés
         List<int[]> orderedMoves = new ArrayList<>();
         for (MoveScore ms : scoredMoves) {
             orderedMoves.add(ms.move);
@@ -240,7 +269,17 @@ public class MinMaxAlphaBeta {
         return orderedMoves;
     }
     
-    // 内部类，用于走法评分排序
+    /**
+     * Classe utilitaire pour stocker et trier les coups avec leurs scores.
+     * 
+     * Cette classe est utilisée pour :
+     * - Associer un coup (position) avec son score d'évaluation
+     * - Faciliter le tri des coups par score
+     * - Maintenir l'ordre stable lors du tri
+     * 
+     * Les coups sont triés principalement par score, puis par position
+     * pour assurer un ordre déterministe des coups de même score.
+     */
     private class MoveScore {
         int[] move;
         int score;
@@ -252,10 +291,10 @@ public class MinMaxAlphaBeta {
     }
     
     /**
-     * 评估某个位置的走法得分
+     * Évalue le score d'un coup à une position donnée
      */
     private int evaluateMoveScore(EtatDuJeu etat, int row, int col, char player) {
-        // 缓存键
+        // Clé de cache
         String key = row + "," + col + "," + player;
         if (evaluationCache.containsKey(key)) {
             return evaluationCache.get(key);
@@ -266,52 +305,52 @@ public class MinMaxAlphaBeta {
         int taille = etat.getTaillePlateau();
         char opponent = (player == 'X') ? 'O' : 'X';
         
-        // 先模拟落子
+        // Simuler d'abord le coup
         plateau[row][col] = player;
         
-        // 检查是否连五
+        // Vérifier l'alignement de 5
         if (checkWin(plateau, row, col, taille)) {
             score += WIN_SCORE;
         }
         
-        // 计算棋形分数
+        // Calculer le score des formations
         score += calculatePatternScore(plateau, row, col, player, taille);
         
-        // 撤销落子
+        // Annuler le coup
         plateau[row][col] = '.';
         
-        // 模拟对手落子，计算防守分数
+        // Simuler le coup de l'adversaire, calculer le score défensif
         plateau[row][col] = opponent;
         if (checkWin(plateau, row, col, taille)) {
-            score += WIN_SCORE / 2; // 优先阻止对手连五
+            score += WIN_SCORE / 2; // Priorité à bloquer l'alignement de 5 de l'adversaire
         }
         
-        // 在攻击模式下，对防守的权重降低
+        // En mode attaque, réduire le poids de la défense
         double defenseWeight = isAggressive ? 0.6 : 0.8;
         score += calculatePatternScore(plateau, row, col, opponent, taille) * defenseWeight;
         
-        // 恢复空位
+        // Restaurer la case vide
         plateau[row][col] = '.';
         
-        // 位置加分，越靠近中心越好
+        // Bonus de position, meilleur près du centre
         int centre = taille / 2;
         int distanceToCenter = Math.abs(row - centre) + Math.abs(col - centre);
         score += (taille - distanceToCenter) * 2;
         
-        // 缓存结果
+        // Mettre en cache le résultat
         evaluationCache.put(key, score);
         
         return score;
     }
     
     /**
-     * 检查从指定位置是否构成五连
+     * Vérifie si un alignement de 5 est formé à partir de la position donnée
      */
     private boolean checkWin(char[][] plateau, int row, int col, int taille) {
         char player = plateau[row][col];
         if (player == '.') return false;
         
-        // 8个方向
+        // 8 directions
         int[][] directions = {
             {0, 1}, {1, 0}, {1, 1}, {1, -1},
             {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}
@@ -319,9 +358,9 @@ public class MinMaxAlphaBeta {
         
         for (int[] dir : directions) {
             int dx = dir[0], dy = dir[1];
-            int count = 1; // 当前位置算1个
+            int count = 1; // Compter la position actuelle
             
-            // 向正方向检查
+            // Vérifier dans la direction positive
             for (int i = 1; i < 5; i++) {
                 int nx = row + i * dx, ny = col + i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille || plateau[nx][ny] != player) {
@@ -330,7 +369,7 @@ public class MinMaxAlphaBeta {
                 count++;
             }
             
-            // 向反方向检查
+            // Vérifier dans la direction négative
             for (int i = 1; i < 5; i++) {
                 int nx = row - i * dx, ny = col - i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille || plateau[nx][ny] != player) {
@@ -346,12 +385,12 @@ public class MinMaxAlphaBeta {
     }
     
     /**
-     * 计算棋形分数
+     * Calcule le score des formations
      */
     private int calculatePatternScore(char[][] plateau, int row, int col, char player, int taille) {
         int score = 0;
         
-        // 8个方向
+        // 8 directions
         int[][] directions = {
             {0, 1}, {1, 0}, {1, 1}, {1, -1},
             {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}
@@ -360,12 +399,12 @@ public class MinMaxAlphaBeta {
         for (int[] dir : directions) {
             int dx = dir[0], dy = dir[1];
             
-            // 计算连子数和空位
-            int count = 1; // 当前位置算1个
-            int openEnds = 0; // 开放端数
+            // Compter les pièces consécutives et les extrémités libres
+            int count = 1; // Compter la position actuelle
+            int openEnds = 0; // Nombre d'extrémités libres
             boolean blockedBefore = false, blockedAfter = false;
             
-            // 向正方向检查
+            // Vérifier dans la direction positive
             for (int i = 1; i <= 4; i++) {
                 int nx = row + i * dx, ny = col + i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
@@ -384,7 +423,7 @@ public class MinMaxAlphaBeta {
                 }
             }
             
-            // 向反方向检查
+            // Vérifier dans la direction négative
             for (int i = 1; i <= 4; i++) {
                 int nx = row - i * dx, ny = col - i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
@@ -403,20 +442,20 @@ public class MinMaxAlphaBeta {
                 }
             }
             
-            // 根据棋形评分，更积极的评分
+            // Évaluer la formation selon le score, évaluation plus agressive
             if (count >= 5) {
-                score += WIN_SCORE; // 连五
+                score += WIN_SCORE; // Alignement de 5
             } else if (count == 4) {
-                if (openEnds == 2) score += THREAT_SCORE * 10; // 活四
-                else if (openEnds == 1) score += THREAT_SCORE; // 冲四
+                if (openEnds == 2) score += THREAT_SCORE * 10; // Quatre libres
+                else if (openEnds == 1) score += THREAT_SCORE; // Quatre bloqué
             } else if (count == 3) {
-                if (openEnds == 2) score += 1500; // 活三，增加分数
-                else if (openEnds == 1) score += 150; // 眠三，增加分数
+                if (openEnds == 2) score += 1500; // Trois libres, score augmenté
+                else if (openEnds == 1) score += 150; // Trois bloqué, score augmenté
             } else if (count == 2) {
-                if (openEnds == 2) score += 70; // 活二，增加分数
-                else if (openEnds == 1) score += 15; // 眠二，增加分数
+                if (openEnds == 2) score += 70; // Deux libres, score augmenté
+                else if (openEnds == 1) score += 15; // Deux bloqué, score augmenté
             } else if (count == 1) {
-                if (openEnds == 2) score += 5; // 活一，增加分数
+                if (openEnds == 2) score += 5; // Un libre, score augmenté
             }
         }
         
@@ -424,34 +463,34 @@ public class MinMaxAlphaBeta {
     }
 
     /**
-     * Alpha-Beta剪枝算法的递归实现
-     * @param etat 当前游戏状态
-     * @param profondeur 剩余搜索深度
-     * @param alpha Alpha值
-     * @param beta Beta值
-     * @param estMaximisant 是否为最大化玩家回合（AI）
-     * @return 搜索分支的评分
+     * Implémentation récursive de l'algorithme Alpha-Beta
+     * @param etat État actuel du jeu
+     * @param profondeur Profondeur de recherche restante
+     * @param alpha Valeur Alpha
+     * @param beta Valeur Beta
+     * @param estMaximisant Si c'est le tour du joueur maximisant (IA)
+     * @return Score de la branche de recherche
      */
     private int alphaBeta(EtatDuJeu etat, int profondeur, int alpha, int beta, boolean estMaximisant) {
-        // 检查是否超时
+        // Vérifier le timeout
         if (System.currentTimeMillis() - startTime > timeLimit) {
             timeOut = true;
-            return 0; // 返回中性分数
+            return 0; // Retourner un score neutre
         }
         
-        // 终止条件
+        // Conditions d'arrêt
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
         
-        // 检查是否有胜者
+        // Vérifier s'il y a un gagnant
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (plateau[i][j] != '.') {
                     if (checkWin(plateau, i, j, taille)) {
-                        // 根据胜者返回分数
-                        if (plateau[i][j] == 'O') { // AI赢
-                            return WIN_SCORE + profondeur * 100; // 越早赢越好，增加深度奖励
-                        } else { // 对手赢
+                        // Retourner le score selon le gagnant
+                        if (plateau[i][j] == 'O') { // IA gagne
+                            return WIN_SCORE + profondeur * 100; // Mieux vaut gagner plus tôt, bonus de profondeur
+                        } else { // Adversaire gagne
                             return -WIN_SCORE - profondeur * 100;
                         }
                     }
@@ -459,12 +498,12 @@ public class MinMaxAlphaBeta {
             }
         }
         
-        // 到达最大深度或者棋盘已满
+        // Atteint la profondeur maximale ou plateau plein
         if (profondeur == 0 || LancerJeu.estPlateauPlein(etat)) {
             return evaluerPosition(etat);
         }
         
-        // 获取下一步可能的走法
+        // Obtenir les coups possibles suivants
         List<int[]> moves = new ArrayList<>();
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
@@ -474,9 +513,9 @@ public class MinMaxAlphaBeta {
             }
         }
         
-        // 限制搜索的走法数量，以提高效率
+        // Limiter le nombre de coups à explorer pour améliorer l'efficacité
         if (moves.size() > 15) {
-            // 手动排序走法
+            // Trier manuellement les coups
             List<MoveScore> scoredMoves = new ArrayList<>();
             for (int[] move : moves) {
                 int score;
@@ -488,21 +527,21 @@ public class MinMaxAlphaBeta {
                 scoredMoves.add(new MoveScore(move, score));
             }
             
-            // 稳定排序
+            // Tri stable
             Collections.sort(scoredMoves, new Comparator<MoveScore>() {
                 @Override
                 public int compare(MoveScore m1, MoveScore m2) {
                     if (m1.score != m2.score) {
-                        return Integer.compare(m2.score, m1.score); // 降序
+                        return Integer.compare(m2.score, m1.score); // Ordre décroissant
                     }
                     if (m1.move[0] != m2.move[0]) {
-                        return Integer.compare(m1.move[0], m2.move[0]); // 行升序
+                        return Integer.compare(m1.move[0], m2.move[0]); // Ordre croissant des lignes
                     }
-                    return Integer.compare(m1.move[1], m2.move[1]); // 列升序
+                    return Integer.compare(m1.move[1], m2.move[1]); // Ordre croissant des colonnes
                 }
             });
             
-            // 只考虑最好的15个走法
+            // Ne considérer que les 15 meilleurs coups
             moves.clear();
             for (int i = 0; i < Math.min(15, scoredMoves.size()); i++) {
                 moves.add(scoredMoves.get(i).move);
@@ -555,10 +594,10 @@ public class MinMaxAlphaBeta {
     }
 
     /**
-     * 评估当前棋盘状态
+     * Évalue l'état actuel du plateau
      */
     private int evaluerPosition(EtatDuJeu etat) {
-        // 缓存键
+        // Clé de cache
         String key = boardToString(etat.getPlateau());
         if (evaluationCache.containsKey(key)) {
             return evaluationCache.get(key);
@@ -568,27 +607,27 @@ public class MinMaxAlphaBeta {
         char[][] plateau = etat.getPlateau();
         int taille = etat.getTaillePlateau();
         
-        // 对每个位置进行评估
+        // Évaluer chaque position
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
-                if (plateau[i][j] == 'O') { // AI
+                if (plateau[i][j] == 'O') { // IA
                     score += calculatePatternScore(plateau, i, j, 'O', taille);
-                } else if (plateau[i][j] == 'X') { // 对手
-                    // 在攻击模式下，对对手的评分降低一点权重
+                } else if (plateau[i][j] == 'X') { // Adversaire
+                    // En mode attaque, réduire légèrement le poids de l'évaluation de l'adversaire
                     double opponentWeight = isAggressive ? 0.9 : 1.0;
                     score -= calculatePatternScore(plateau, i, j, 'X', taille) * opponentWeight;
                 }
             }
         }
         
-        // 缓存结果
+        // Mettre en cache le résultat
         evaluationCache.put(key, score);
         
         return score;
     }
     
     /**
-     * 将棋盘转换为字符串，用作缓存键
+     * Convertit le plateau en chaîne de caractères pour la clé de cache
      */
     private String boardToString(char[][] plateau) {
         StringBuilder sb = new StringBuilder();

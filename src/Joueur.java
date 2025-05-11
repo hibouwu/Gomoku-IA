@@ -1,6 +1,19 @@
 package src;
 
-public class Joueur {
+/**
+ * Classe abstraite définissant le comportement d'un joueur dans le jeu de Gomoku.
+ * 
+ * Cette classe abstraite spécifie :
+ * - Les attributs communs à tous les joueurs (nom, symbole, score)
+ * - Les méthodes abstraites que chaque joueur doit implémenter
+ * - Les méthodes de base pour gérer les informations du joueur
+ * 
+ * Elle est étendue par :
+ * - Les joueurs humains (via l'interface graphique)
+ * - Les différentes implémentations d'IA
+ * - Les joueurs de test
+ */
+public abstract class Joueur {
     // Nom du joueur
     private String nom;
 

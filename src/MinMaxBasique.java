@@ -1,6 +1,32 @@
 package src;
 
-public class MinMaxBasique {
+/**
+ * Implémentation basique de l'algorithme Minimax pour le jeu de Gomoku.
+ * 
+ * Cette classe fournit une version simplifiée de l'algorithme Minimax :
+ * - Sans élagage Alpha-Beta
+ * - Avec une profondeur de recherche limitée
+ * - Utilisant des heuristiques basiques
+ * 
+ * Caractéristiques :
+ * - Recherche en profondeur fixe
+ * - Évaluation simple des positions
+ * - Pas d'optimisations avancées
+ * - Temps de calcul plus long que les versions optimisées
+ * 
+ * Cette implémentation sert principalement à des fins éducatives
+ * et de comparaison avec les versions plus avancées.
+ */
+public class MinMaxBasique extends Joueur {
+
+    /**
+     * Constructeur de l'IA MinMax basique
+     * @param nom Le nom de l'IA
+     * @param symbole Le symbole utilisé par l'IA ('X' ou 'O')
+     */
+    public MinMaxBasique(String nom, char symbole) {
+        super(nom, symbole);
+    }
 
     /**
      * Trouve le meilleur coup à jouer pour l'IA en utilisant l'algorithme Minimax.

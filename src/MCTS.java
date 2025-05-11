@@ -7,17 +7,41 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Implémentation de l'algorithme Monte Carlo Tree Search pour Gomoku
+ * Implémentation de l'algorithme Monte Carlo Tree Search (MCTS) pour le jeu de Gomoku.
+ * 
+ * Cette classe utilise l'algorithme MCTS pour trouver le meilleur coup à jouer dans une partie de Gomoku.
+ * L'algorithme combine la recherche en arbre avec des simulations Monte Carlo pour évaluer les positions.
+ * 
+ * Caractéristiques principales :
+ * - Utilise la formule UCB1 pour équilibrer l'exploration et l'exploitation
+ * - Implémente une simulation améliorée avec une stratégie semi-aléatoire
+ * - Optimise la recherche en considérant uniquement les coups pertinents
+ * - Utilise des heuristiques pour évaluer les positions et les formations
+ * 
+ * L'algorithme se compose de quatre étapes principales :
+ * 1. Sélection : Sélectionne un nœud prometteur à partir de la racine
+ * 2. Expansion : Développe l'arbre en ajoutant un nouveau nœud
+ * 3. Simulation : Simule une partie à partir du nœud sélectionné
+ * 4. Rétropropagation : Met à jour les statistiques des nœuds visités
  */
-public class MCTS {
-    private static final double UCT_CONSTANT = 1.414; // UCB1公式中的常数 (√2更精确)
-    private static final int MAX_SIMULATIONS = 10000; // 增加最大模拟次数
+public class MCTS extends Joueur {
+    private static final double UCT_CONSTANT = 1.414;
+    private static final int MAX_SIMULATIONS = 10000;
     private Random random = new Random();
-    private int taille; // 棋盘大小
-    private int centre; // 棋盘中心点
+    private int taille; // taille du plateau
+    private int centre; // centre du plateau
 
     /**
-     * 代表MCTS搜索树中的节点
+     * Constructeur de l'IA MCTS
+     * @param nom Le nom de l'IA
+     * @param symbole Le symbole utilisé par l'IA ('X' ou 'O')
+     */
+    public MCTS(String nom, char symbole) {
+        super(nom, symbole);
+    }
+
+    /**
+     * représente un noeud dans l'arbre de recherche MCTS
      */
     private class Node {
         EtatDuJeu etat;
@@ -114,13 +138,13 @@ public class MCTS {
     }
 
     /**
-     * 寻找最佳落子位置
+     * rechercher la meilleure position pour jouer
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int tempsMaxMS) {
         taille = etat.getTaillePlateau();
         centre = taille / 2;
         
-        // 如果是第一步，直接落在中心点附近
+        // si c'est la première fois, jouer près du centre
         boolean firstMove = true;
         char[][] plateau = etat.getPlateau();
         for (int i = 0; i < taille; i++) {
@@ -134,8 +158,8 @@ public class MCTS {
         }
         
         if (firstMove) {
-            // 第一步随机选择中心点附近的位置
-            int offset = random.nextInt(2); // 0 或 1
+            // première fois, choisir une position aléatoire près du centre
+            int offset = random.nextInt(2); // 0 ou 1
             int row = centre;
             int col = centre;
             if (random.nextBoolean()) row += offset;
@@ -147,44 +171,44 @@ public class MCTS {
         long startTime = System.currentTimeMillis();
         int simulations = 0;
         
-        // 根节点，代表当前状态
+        // racine, représente l'état actuel
         Node rootNode = new Node(etat);
         
-        // 在时间限制内执行尽可能多的模拟
+        // exécuter autant de simulations que possible dans le temps limite
         while (simulations < MAX_SIMULATIONS && (System.currentTimeMillis() - startTime) < tempsMaxMS) {
-            // 1. 选择：从根节点选择一个最有前途的叶子节点
+            // 1. sélectionner: sélectionner un noeud feuille prometteur à partir de la racine
             Node nodeToExplore = selectPromisingNode(rootNode);
             
-            // 2. 扩展：如果选择的节点不是终止状态且有未尝试的走法，则扩展它
+            // 2. développer: si le noeud sélectionné n'est pas un état terminal et a des coups non essayés, le développer
             if (!LancerJeu.verifierVictoire(nodeToExplore.etat, -1, -1) && 
                 !LancerJeu.estPlateauPlein(nodeToExplore.etat)) {
                 expandNode(nodeToExplore);
             }
             
-            // 3. 模拟：如果有子节点，从中随机选择一个；否则使用已选择的节点
+            // 3. simulation: si le noeud sélectionné a des enfants, choisir un enfant aléatoirement; sinon, utiliser le noeud sélectionné
             Node nodeToSimulate = nodeToExplore;
             if (!nodeToExplore.children.isEmpty()) {
                 nodeToSimulate = getRandomChildNode(nodeToExplore);
             }
             
-            // 进行改进的模拟游戏
+            // simulation améliorée
             char result = simulateImprovedPlayout(nodeToSimulate);
             
-            // 4. 回传：更新节点数据
+            // 4. backpropagation: mettre à jour les données du noeud
             backPropagation(nodeToSimulate, result);
             
             simulations++;
         }
         
-        // 选择胜率最高的子节点
+        // sélectionner le noeud avec le meilleur taux de victoire
         Node bestChild = rootNode.getChildWithMaxScore();
         if (bestChild == null) {
-            // 如果没有子节点（罕见情况），返回一个合法的启发式走法
+            // si aucun enfant (rarement), retourner un coup légal avec une valeur heuristique
             List<int[]> legalMoves = getOrderedMoves(etat);
             if (!legalMoves.isEmpty()) {
-                return legalMoves.get(0); // 返回启发式评分最高的走法
+                return legalMoves.get(0); // retourner le coup avec la valeur heuristique la plus élevée
             }
-            return new int[]{-1, -1}; // 无法找到合法走法，应该不会发生
+            return new int[]{-1, -1}; // ne devrait pas arriver
         }
         
         long endTime = System.currentTimeMillis();
@@ -197,7 +221,7 @@ public class MCTS {
     }
 
     /**
-     * 选择最有前途的节点
+     * sélectionner le noeud prometteur
      */
     private Node selectPromisingNode(Node rootNode) {
         Node node = rootNode;
@@ -208,7 +232,7 @@ public class MCTS {
     }
 
     /**
-     * 扩展节点：添加未尝试的走法作为新的子节点，使用启发式排序
+     * développer le noeud: ajouter un coup non essayé comme nouveau noeud enfant, utiliser une classification heuristique
      */
     private void expandNode(Node node) {
         List<int[]> possibleMoves = node.getUntriedMoves();
@@ -216,9 +240,9 @@ public class MCTS {
             return;
         }
         
-        // 按启发式价值对可能的走法进行排序
+        // trier les coups possibles par valeur heuristique
         possibleMoves = getOrderedMoves(node.etat);
-        // 保留未尝试的走法
+        // garder les coups non essayés
         List<int[]> untriedMoves = new ArrayList<>();
         for (int[] move : possibleMoves) {
             boolean alreadyTried = false;
@@ -230,40 +254,40 @@ public class MCTS {
             }
             if (!alreadyTried) {
                 untriedMoves.add(move);
-                break; // 只添加最优的未尝试走法
+                break; // ajouter uniquement le meilleur coup non essayé
             }
         }
         
         if (untriedMoves.isEmpty()) return;
         
-        // 选择分数最高的未尝试走法
+        // sélectionner le coup avec la valeur heuristique la plus élevée
         int[] move = untriedMoves.get(0);
         
-        // 创建一个代表这个走法的新状态
+        // créer un nouvel état représentant ce coup
         EtatDuJeu newState = deepCopyState(node.etat);
         newState.getPlateau()[move[0]][move[1]] = newState.getJoueurActuel();
         
-        // 更改玩家
+        // changer le joueur
         char nextPlayer = newState.getJoueurActuel() == 'X' ? 'O' : 'X';
         newState.setJoueurActuel(nextPlayer);
         
-        // 创建这个新状态的节点
+        // créer le noeud de cet nouvel état
         Node newNode = new Node(newState, node, move);
         node.children.add(newNode);
     }
 
     /**
-     * 从节点的子节点中随机选择一个，偏好选择较少访问的节点
+     * sélectionner un noeud enfant aléatoirement, préférer les noeuds moins visités
      */
     private Node getRandomChildNode(Node node) {
         if (node.children.isEmpty()) {
             return null;
         }
         
-        // 使用Roulette Wheel Selection，访问次数越少的节点被选择的概率越高
+        // utiliser la sélection de Roulette Wheel, les noeuds moins visités ont plus de chances d'être sélectionnés
         double totalInverseVisits = 0;
         for (Node child : node.children) {
-            totalInverseVisits += 1.0 / (child.visits + 1); // +1避免除以0
+            totalInverseVisits += 1.0 / (child.visits + 1); // +1 pour éviter la division par 0
         }
         
         double rand = random.nextDouble() * totalInverseVisits;
@@ -275,89 +299,89 @@ public class MCTS {
             }
         }
         
-        // 如果因为浮点精度问题没有选中，返回最后一个子节点
+        // si parce que des problèmes de précision flottante n'ont pas été sélectionnés, retourner le dernier enfant
         return node.children.get(node.children.size() - 1);
     }
 
     /**
-     * 进行改进的游戏模拟，返回获胜者 'X', 'O' 或 'T'（平局）
-     * 使用半随机策略，优先选择有威胁的走法
+     * simulation améliorée, retourner le gagnant 'X', 'O' ou 'T' (match nul)
+     * utiliser une stratégie semi-aléatoire, privilégier les coups menaçants
      */
     private char simulateImprovedPlayout(Node node) {
-        // 创建游戏状态的深拷贝，避免修改原始节点
+        // créer une copie profonde de l'état du jeu, pour éviter de modifier le noeud original
         EtatDuJeu tempState = deepCopyState(node.etat);
         
-        // 检查当前状态是否已经结束
+        // vérifier si l'état actuel est terminé
         if (LancerJeu.verifierVictoire(tempState, -1, -1)) {
-            // 游戏已经结束，获胜者是上一个玩家
+            // le jeu est terminé, le gagnant est le dernier joueur
             return tempState.getJoueurActuel() == 'X' ? 'O' : 'X'; 
         }
         
         if (LancerJeu.estPlateauPlein(tempState)) {
-            return 'T'; // 平局
+            return 'T'; // match nul
         }
         
-        // 最多模拟50步，避免无限循环
+        // simuler au maximum 50 coups, pour éviter les boucles infinies
         int maxSteps = 50; 
         int steps = 0;
         
-        // 半随机落子直到游戏结束
+        // semi-aléatoire, jouer jusqu'à la fin du jeu
         while (steps < maxSteps) {
             steps++;
             
-            // 获取按启发式价值排序的走法
+            // obtenir les coups triés par valeur heuristique
             List<int[]> orderedMoves = getOrderedMoves(tempState);
             if (orderedMoves.isEmpty()) {
-                return 'T'; // 平局
+                return 'T'; // match nul
             }
             
-            // 选择走法：80%概率选择最佳走法，20%概率随机选择
+            // sélectionner le coup: 80% de chances de choisir le meilleur coup, 20% de chances de choisir un coup aléatoire
             int[] move;
             if (random.nextDouble() < 0.8) {
-                move = orderedMoves.get(0); // 最佳走法
+                move = orderedMoves.get(0); // meilleur coup
             } else {
-                move = orderedMoves.get(random.nextInt(Math.min(3, orderedMoves.size()))); // 随机选择前3个最佳走法中的一个
+                move = orderedMoves.get(random.nextInt(Math.min(3, orderedMoves.size()))); // choisir un coup aléatoire parmi les 3 meilleurs
             }
             
-            // 执行走法
+            // exécuter le coup
             tempState.getPlateau()[move[0]][move[1]] = tempState.getJoueurActuel();
             
-            // 检查是否获胜
+            // vérifier si le joueur actuel a gagné
             if (LancerJeu.verifierVictoire(tempState, move[0], move[1])) {
-                return tempState.getJoueurActuel(); // 当前玩家获胜
+                return tempState.getJoueurActuel(); // le joueur actuel a gagné
             }
             
-            // 检查是否平局
+            // vérifier si match nul
             if (LancerJeu.estPlateauPlein(tempState)) {
-                return 'T'; // 平局
+                return 'T'; // match nul
             }
             
-            // 切换玩家
+            // changer le joueur
             char nextPlayer = tempState.getJoueurActuel() == 'X' ? 'O' : 'X';
             tempState.setJoueurActuel(nextPlayer);
         }
         
-        // 如果超过最大步数，根据棋盘评估决定结果
+        // si plus de 50 coups, décider en fonction de l'évaluation du plateau
         double score = evaluateBoard(tempState);
-        if (Math.abs(score) < 100) return 'T'; // 差距不大，平局
+        if (Math.abs(score) < 100) return 'T'; // différence pas grande, match nul
         return score > 0 ? 'O' : 'X';
     }
 
     /**
-     * 从叶子节点向上回传结果
+     * remonter les résultats
      */
     private void backPropagation(Node nodeToExplore, char playerWhoWon) {
         Node tempNode = nodeToExplore;
         while (tempNode != null) {
             tempNode.visits++;
             
-            // 根据模拟的获胜者来更新分数
+            // mettre à jour le score en fonction du gagnant de la simulation
             if (playerWhoWon == 'T') {
-                // 平局给一半的分数
+                // match nul, donner la moitié des points
                 tempNode.winScore += 0.5;
             } else {
                 char nodePlayer = tempNode.etat.getJoueurActuel();
-                // 如果获胜方与当前节点的玩家相反，则当前节点的玩家获胜
+                // si le gagnant est le joueur opposé, le joueur actuel a gagné
                 if ((nodePlayer == 'X' && playerWhoWon == 'O') ||
                     (nodePlayer == 'O' && playerWhoWon == 'X')) {
                     tempNode.winScore += 1.0;
@@ -369,46 +393,46 @@ public class MCTS {
     }
 
     /**
-     * 计算节点的UCT值，平衡探索与利用
+     * calculer la valeur UCT du noeud, équilibrer l'exploration et l'exploitation
      */
     private double calculateUCT(Node node) {
         if (node.visits == 0) {
-            return Double.MAX_VALUE; // 确保未访问的节点会被选择
+            return Double.MAX_VALUE; // s'assurer que les noeuds non visités seront sélectionnés
         }
-        
-        // 利用项：当前节点的胜率
+
+        // exploitation : le taux de victoire du noeud
         double exploitation = node.winScore / node.visits;
         
-        // 探索项：偏好访问次数少的节点
+        // exploration : le noeud avec le moins de visites sera privilégié
         double exploration = UCT_CONSTANT * Math.sqrt(Math.log(node.parent.visits) / node.visits);
         
-        // 位置项：偏好中心位置
+        // position : le noeud avec la position la plus proche du centre sera privilégié
         double positionBonus = 0;
         if (node.move != null) {
             int distanceToCenter = Math.abs(node.move[0] - centre) + Math.abs(node.move[1] - centre);
-            positionBonus = 0.1 * (1.0 - distanceToCenter / (taille - 1)); // 距离中心越近，加分越高
+            positionBonus = 0.1 * (1.0 - distanceToCenter / (taille - 1)); // Plus proche du centre, meilleur bonus
         }
         
         return exploitation + exploration + positionBonus;
     }
 
     /**
-     * 获取按启发式价值排序的走法
+     * obtenir les coups triés par valeur heuristique
      */
     private List<int[]> getOrderedMoves(EtatDuJeu etat) {
         List<int[]> legalMoves = getAllLegalMoves(etat);
         
-        // 对走法进行启发式评分
+        // évaluer les coups par valeur heuristique
         final char currentPlayer = etat.getJoueurActuel();
         final char[][] plateau = etat.getPlateau();
         
-        // 按分数排序走法
+        // trier les coups par score
         Collections.sort(legalMoves, new Comparator<int[]>() {
             @Override
             public int compare(int[] move1, int[] move2) {
                 int score1 = evaluateMove(plateau, move1[0], move1[1], currentPlayer);
                 int score2 = evaluateMove(plateau, move2[0], move2[1], currentPlayer);
-                return Integer.compare(score2, score1); // 降序排列
+                return Integer.compare(score2, score1); // trier par score décroissant
             }
         });
         
@@ -416,46 +440,46 @@ public class MCTS {
     }
     
     /**
-     * 评估一个落子位置的价值
+     * évaluer la valeur d'un coup
      */
     private int evaluateMove(char[][] plateau, int row, int col, char player) {
         int score = 0;
         
-        // 位置分：优先考虑中心位置
+        // position : privilégier la position centrale
         int distanceToCenter = Math.abs(row - centre) + Math.abs(col - centre);
-        score += 10 * (taille - distanceToCenter); // 距离中心越近越好
+        score += 10 * (taille - distanceToCenter); // plus proche du centre, meilleur
         
-        // 临时模拟落子
+        // Simuler temporairement le coup
         plateau[row][col] = player;
         
-        // 计算防守分和进攻分
+        // Calculer les scores d'attaque et de défense
         char opponent = (player == 'X') ? 'O' : 'X';
         int attackScore = calculatePatternScore(plateau, row, col, player);
         
-        // 恢复棋盘
+        // Restaurer le plateau
         plateau[row][col] = '.';
         
-        // 临时模拟对手落子
+        // Simuler temporairement le coup de l'adversaire
         plateau[row][col] = opponent;
         int defenseScore = calculatePatternScore(plateau, row, col, opponent);
         
-        // 恢复棋盘
+        // Restaurer le plateau
         plateau[row][col] = '.';
         
-        // 进攻略重于防守
+        // L'attaque est légèrement plus importante que la défense
         score += attackScore * 1.1 + defenseScore;
         
         return score;
     }
     
     /**
-     * 计算棋型分数
+     * Calculer le score des formations
      */
     private int calculatePatternScore(char[][] plateau, int row, int col, char player) {
         int score = 0;
         int taille = plateau.length;
         
-        // 8个方向
+        // 8 directions
         int[][] directions = {
             {0, 1}, {1, 0}, {1, 1}, {1, -1}, 
             {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}
@@ -464,12 +488,12 @@ public class MCTS {
         for (int[] dir : directions) {
             int dx = dir[0], dy = dir[1];
             
-            // 计算连子数和空位数
-            int count = 1; // 当前位置算1个
+            // Compter les pièces consécutives et les cases vides
+            int count = 1; // Compter la position actuelle
             int emptyBefore = 0, emptyAfter = 0;
             boolean blockedBefore = false, blockedAfter = false;
             
-            // 向前检查
+            // Vérifier dans la direction positive
             for (int i = 1; i <= 4; i++) {
                 int nx = row + i * dx, ny = col + i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
@@ -488,7 +512,7 @@ public class MCTS {
                 }
             }
             
-            // 向后检查
+            // Vérifier dans la direction négative
             for (int i = 1; i <= 4; i++) {
                 int nx = row - i * dx, ny = col - i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
@@ -507,18 +531,18 @@ public class MCTS {
                 }
             }
             
-            // 判断棋型并计分
+            // Évaluer la formation et attribuer un score
             if (count >= 5) {
-                score += 100000; // 成五
+                score += 100000; // Alignement de 5
             } else if (count == 4) {
-                if (!blockedBefore && !blockedAfter) score += 10000; // 活四
-                else if (!blockedBefore || !blockedAfter) score += 1000; // 冲四
+                if (!blockedBefore && !blockedAfter) score += 10000; // Quatre libres
+                else if (!blockedBefore || !blockedAfter) score += 1000; // Quatre bloqué
             } else if (count == 3) {
-                if (!blockedBefore && !blockedAfter) score += 500; // 活三
-                else if (!blockedBefore || !blockedAfter) score += 100; // 眠三
+                if (!blockedBefore && !blockedAfter) score += 500; // Trois libres
+                else if (!blockedBefore || !blockedAfter) score += 100; // Trois bloqué
             } else if (count == 2) {
-                if (!blockedBefore && !blockedAfter) score += 50; // 活二
-                else if (!blockedBefore || !blockedAfter) score += 10; // 眠二
+                if (!blockedBefore && !blockedAfter) score += 50; // Deux libres
+                else if (!blockedBefore || !blockedAfter) score += 10; // Deux bloqué
             }
         }
         
@@ -526,13 +550,13 @@ public class MCTS {
     }
     
     /**
-     * 评估棋盘的整体状态
+     * Évaluer l'état global du plateau
      */
     private double evaluateBoard(EtatDuJeu etat) {
         char[][] plateau = etat.getPlateau();
         double score = 0;
         
-        // 检查所有行、列和对角线
+        // Vérifier toutes les lignes, colonnes et diagonales
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (plateau[i][j] == 'O') {
@@ -547,17 +571,17 @@ public class MCTS {
     }
 
     /**
-     * 获取所有合法走法，根据距离最近棋子的远近优化
+     * Obtenir tous les coups légaux, optimisé selon la distance aux pièces existantes
      */
     private List<int[]> getAllLegalMoves(EtatDuJeu etat) {
         List<int[]> legalMoves = new ArrayList<>();
         int taille = etat.getTaillePlateau();
         char[][] plateau = etat.getPlateau();
         
-        // 只考虑已有棋子周围3格内的空位
+        // Ne considérer que les cases vides à 3 cases des pièces existantes
         boolean hasExistingPieces = false;
         
-        // 先找到所有已有棋子
+        // D'abord trouver toutes les pièces existantes
         List<int[]> existingPieces = new ArrayList<>();
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
@@ -568,7 +592,7 @@ public class MCTS {
             }
         }
         
-        // 如果棋盘为空，返回中心点附近的走法
+        // Si le plateau est vide, retourner les coups près du centre
         if (!hasExistingPieces) {
             int c = taille / 2;
             for (int i = c-1; i <= c+1; i++) {
@@ -581,10 +605,10 @@ public class MCTS {
             return legalMoves;
         }
         
-        // 设置为记录每个空位是否已添加到合法走法列表
+        // Tableau pour marquer les cases déjà ajoutées aux coups légaux
         boolean[][] added = new boolean[taille][taille];
         
-        // 对每个已有棋子，考虑其周围3格内的空位
+        // Pour chaque pièce existante, considérer les cases vides dans un rayon de 3 cases
         for (int[] piece : existingPieces) {
             int row = piece[0], col = piece[1];
             for (int i = Math.max(0, row-3); i <= Math.min(taille-1, row+3); i++) {
@@ -597,7 +621,7 @@ public class MCTS {
             }
         }
         
-        // 如果没有找到合法走法（极端情况），返回所有空位
+        // Si aucun coup légal n'est trouvé (cas extrême), retourner toutes les cases vides
         if (legalMoves.isEmpty()) {
             for (int i = 0; i < taille; i++) {
                 for (int j = 0; j < taille; j++) {
@@ -612,14 +636,14 @@ public class MCTS {
     }
 
     /**
-     * 创建游戏状态的深拷贝
+     * Créer une copie profonde de l'état du jeu
      */
     private EtatDuJeu deepCopyState(EtatDuJeu originalState) {
         EtatDuJeu newState = new EtatDuJeu(originalState.getTaillePlateau());
         newState.setJoueurActuel(originalState.getJoueurActuel());
         newState.setFinDuJeu(originalState.estFinDuJeu());
         
-        // 复制棋盘
+        // Copier le plateau
         char[][] originalBoard = originalState.getPlateau();
         char[][] newBoard = newState.getPlateau();
         

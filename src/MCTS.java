@@ -41,104 +41,10 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * représente un noeud dans l'arbre de recherche MCTS
-     */
-    private class Node {
-        EtatDuJeu etat;
-        Node parent;
-        List<Node> children;
-        int visits;
-        double winScore;
-        int[] move; // [row, col]
-
-        public Node(EtatDuJeu etat) {
-            this.etat = deepCopyState(etat);
-            this.children = new ArrayList<>();
-            this.visits = 0;
-            this.winScore = 0;
-            this.move = null;
-        }
-
-        public Node(EtatDuJeu etat, Node parent, int[] move) {
-            this.etat = deepCopyState(etat);
-            this.parent = parent;
-            this.children = new ArrayList<>();
-            this.visits = 0;
-            this.winScore = 0;
-            this.move = move;
-        }
-
-        public List<int[]> getUntriedMoves() {
-            List<int[]> legalMoves = getAllLegalMoves(etat);
-            if (children.isEmpty()) {
-                return legalMoves;
-            }
-
-            List<int[]> triedMoves = new ArrayList<>();
-            for (Node child : children) {
-                triedMoves.add(child.move);
-            }
-
-            List<int[]> untriedMoves = new ArrayList<>();
-            for (int[] move : legalMoves) {
-                boolean alreadyTried = false;
-                for (int[] triedMove : triedMoves) {
-                    if (move[0] == triedMove[0] && move[1] == triedMove[1]) {
-                        alreadyTried = true;
-                        break;
-                    }
-                }
-                if (!alreadyTried) {
-                    untriedMoves.add(move);
-                }
-            }
-            return untriedMoves;
-        }
-
-        public Node getChildWithMaxUCT() {
-            double maxUCT = Double.NEGATIVE_INFINITY;
-            Node result = null;
-
-            for (Node child : children) {
-                double uctValue = calculateUCT(child);
-                if (uctValue > maxUCT) {
-                    maxUCT = uctValue;
-                    result = child;
-                }
-            }
-            return result;
-        }
-
-        public Node getChildWithMaxVisits() {
-            int maxVisits = Integer.MIN_VALUE;
-            Node result = null;
-
-            for (Node child : children) {
-                if (child.visits > maxVisits) {
-                    maxVisits = child.visits;
-                    result = child;
-                }
-            }
-            return result;
-        }
-        
-        public Node getChildWithMaxScore() {
-            double maxScore = Double.NEGATIVE_INFINITY;
-            Node result = null;
-
-            for (Node child : children) {
-                double winRate = child.visits > 0 ? child.winScore / child.visits : 0;
-                if (winRate > maxScore) {
-                    maxScore = winRate;
-                    result = child;
-                }
-            }
-            return result != null ? result : getChildWithMaxVisits();
-        }
-    }
-
-    /**
-     * rechercher la meilleure position pour jouer
+     * Trouve le meilleur coup à jouer pour l'IA en utilisant l'algorithme MCTS
+     * @param etat État actuel du jeu
+     * @param tempsMaxMS Temps maximum de recherche en millisecondes
+     * @return Tableau contenant [ligne,colonne] du meilleur coup
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int tempsMaxMS) {
         taille = etat.getTaillePlateau();
@@ -221,7 +127,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * sélectionner le noeud prometteur
+     * Sélectionne le nœud prometteur à partir de la racine
+     * @param rootNode Nœud racine de l'arbre
+     * @return Nœud sélectionné pour l'exploration
      */
     private Node selectPromisingNode(Node rootNode) {
         Node node = rootNode;
@@ -232,7 +140,8 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * développer le noeud: ajouter un coup non essayé comme nouveau noeud enfant, utiliser une classification heuristique
+     * Développe le nœud en ajoutant un nouveau coup
+     * @param node Nœud à développer
      */
     private void expandNode(Node node) {
         List<int[]> possibleMoves = node.getUntriedMoves();
@@ -277,7 +186,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * sélectionner un noeud enfant aléatoirement, préférer les noeuds moins visités
+     * Sélectionne un nœud enfant aléatoirement
+     * @param node Nœud parent
+     * @return Nœud enfant sélectionné
      */
     private Node getRandomChildNode(Node node) {
         if (node.children.isEmpty()) {
@@ -304,8 +215,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * simulation améliorée, retourner le gagnant 'X', 'O' ou 'T' (match nul)
-     * utiliser une stratégie semi-aléatoire, privilégier les coups menaçants
+     * Simule une partie à partir d'un nœud
+     * @param node Nœud de départ pour la simulation
+     * @return Symbole du gagnant ('X', 'O' ou 'T' pour match nul)
      */
     private char simulateImprovedPlayout(Node node) {
         // créer une copie profonde de l'état du jeu, pour éviter de modifier le noeud original
@@ -368,7 +280,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * remonter les résultats
+     * Met à jour les statistiques des nœuds visités
+     * @param nodeToExplore Nœud à partir duquel remonter
+     * @param playerWhoWon Symbole du gagnant
      */
     private void backPropagation(Node nodeToExplore, char playerWhoWon) {
         Node tempNode = nodeToExplore;
@@ -393,7 +307,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * calculer la valeur UCT du noeud, équilibrer l'exploration et l'exploitation
+     * Calcule la valeur UCT d'un nœud
+     * @param node Nœud à évaluer
+     * @return Valeur UCT du nœud
      */
     private double calculateUCT(Node node) {
         if (node.visits == 0) {
@@ -417,7 +333,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * obtenir les coups triés par valeur heuristique
+     * Obtient les coups triés par valeur heuristique
+     * @param etat État actuel du jeu
+     * @return Liste des coups triés
      */
     private List<int[]> getOrderedMoves(EtatDuJeu etat) {
         List<int[]> legalMoves = getAllLegalMoves(etat);
@@ -440,7 +358,12 @@ public class MCTS extends Joueur {
     }
     
     /**
-     * évaluer la valeur d'un coup
+     * Évalue la valeur d'un coup
+     * @param plateau Plateau de jeu
+     * @param row Ligne du coup
+     * @param col Colonne du coup
+     * @param player Symbole du joueur
+     * @return Score du coup
      */
     private int evaluateMove(char[][] plateau, int row, int col, char player) {
         int score = 0;
@@ -473,7 +396,12 @@ public class MCTS extends Joueur {
     }
     
     /**
-     * Calculer le score des formations
+     * Calcule le score des formations
+     * @param plateau Plateau de jeu
+     * @param row Ligne de la position
+     * @param col Colonne de la position
+     * @param player Symbole du joueur
+     * @return Score de la formation
      */
     private int calculatePatternScore(char[][] plateau, int row, int col, char player) {
         int score = 0;
@@ -550,7 +478,9 @@ public class MCTS extends Joueur {
     }
     
     /**
-     * Évaluer l'état global du plateau
+     * Évalue l'état global du plateau
+     * @param etat État actuel du jeu
+     * @return Score global du plateau
      */
     private double evaluateBoard(EtatDuJeu etat) {
         char[][] plateau = etat.getPlateau();
@@ -571,7 +501,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * Obtenir tous les coups légaux, optimisé selon la distance aux pièces existantes
+     * Obtient tous les coups légaux
+     * @param etat État actuel du jeu
+     * @return Liste des coups légaux
      */
     private List<int[]> getAllLegalMoves(EtatDuJeu etat) {
         List<int[]> legalMoves = new ArrayList<>();
@@ -636,7 +568,9 @@ public class MCTS extends Joueur {
     }
 
     /**
-     * Créer une copie profonde de l'état du jeu
+     * Crée une copie profonde de l'état du jeu
+     * @param originalState État original à copier
+     * @return Nouvelle copie de l'état
      */
     private EtatDuJeu deepCopyState(EtatDuJeu originalState) {
         EtatDuJeu newState = new EtatDuJeu(originalState.getTaillePlateau());
@@ -654,5 +588,128 @@ public class MCTS extends Joueur {
         }
         
         return newState;
+    }
+
+    /**
+     * Représente un nœud dans l'arbre de recherche MCTS
+     */
+    private class Node {
+        EtatDuJeu etat;
+        Node parent;
+        List<Node> children;
+        int visits;
+        double winScore;
+        int[] move; // [row, col]
+
+        /**
+         * Constructeur pour un nœud racine
+         * @param etat État du jeu à ce nœud
+         */
+        public Node(EtatDuJeu etat) {
+            this.etat = deepCopyState(etat);
+            this.children = new ArrayList<>();
+            this.visits = 0;
+            this.winScore = 0;
+            this.move = null;
+        }
+
+        /**
+         * Constructeur pour un nœud enfant
+         * @param etat État du jeu à ce nœud
+         * @param parent Nœud parent
+         * @param move Coup menant à ce nœud
+         */
+        public Node(EtatDuJeu etat, Node parent, int[] move) {
+            this.etat = deepCopyState(etat);
+            this.parent = parent;
+            this.children = new ArrayList<>();
+            this.visits = 0;
+            this.winScore = 0;
+            this.move = move;
+        }
+
+        /**
+         * Obtient la liste des coups non encore essayés
+         * @return Liste des coups non essayés
+         */
+        public List<int[]> getUntriedMoves() {
+            List<int[]> legalMoves = getAllLegalMoves(etat);
+            if (children.isEmpty()) {
+                return legalMoves;
+            }
+
+            List<int[]> triedMoves = new ArrayList<>();
+            for (Node child : children) {
+                triedMoves.add(child.move);
+            }
+
+            List<int[]> untriedMoves = new ArrayList<>();
+            for (int[] move : legalMoves) {
+                boolean alreadyTried = false;
+                for (int[] triedMove : triedMoves) {
+                    if (move[0] == triedMove[0] && move[1] == triedMove[1]) {
+                        alreadyTried = true;
+                        break;
+                    }
+                }
+                if (!alreadyTried) {
+                    untriedMoves.add(move);
+                }
+            }
+            return untriedMoves;
+        }
+
+        /**
+         * Obtient l'enfant avec la meilleure valeur UCT
+         * @return Nœud enfant avec la meilleure valeur UCT
+         */
+        public Node getChildWithMaxUCT() {
+            double maxUCT = Double.NEGATIVE_INFINITY;
+            Node result = null;
+
+            for (Node child : children) {
+                double uctValue = calculateUCT(child);
+                if (uctValue > maxUCT) {
+                    maxUCT = uctValue;
+                    result = child;
+                }
+            }
+            return result;
+        }
+
+        /**
+         * Obtient l'enfant avec le plus grand nombre de visites
+         * @return Nœud enfant le plus visité
+         */
+        public Node getChildWithMaxVisits() {
+            int maxVisits = Integer.MIN_VALUE;
+            Node result = null;
+
+            for (Node child : children) {
+                if (child.visits > maxVisits) {
+                    maxVisits = child.visits;
+                    result = child;
+                }
+            }
+            return result;
+        }
+        
+        /**
+         * Obtient l'enfant avec le meilleur score
+         * @return Nœud enfant avec le meilleur score
+         */
+        public Node getChildWithMaxScore() {
+            double maxScore = Double.NEGATIVE_INFINITY;
+            Node result = null;
+
+            for (Node child : children) {
+                double winRate = child.visits > 0 ? child.winScore / child.visits : 0;
+                if (winRate > maxScore) {
+                    maxScore = winRate;
+                    result = child;
+                }
+            }
+            return result != null ? result : getChildWithMaxVisits();
+        }
     }
 } 

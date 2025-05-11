@@ -193,6 +193,8 @@ public class MinMaxAlphaBeta extends Joueur {
     
     /**
      * Obtient tous les coups candidats et les trie manuellement
+     * @param etat État actuel du jeu
+     * @return Liste des coups triés par score
      */
     private List<int[]> getOrderedMoves(EtatDuJeu etat) {
         int taille = etat.getTaillePlateau();
@@ -292,6 +294,11 @@ public class MinMaxAlphaBeta extends Joueur {
     
     /**
      * Évalue le score d'un coup à une position donnée
+     * @param etat État actuel du jeu
+     * @param row Ligne de la position
+     * @param col Colonne de la position
+     * @param player Symbole du joueur
+     * @return Score de la position
      */
     private int evaluateMoveScore(EtatDuJeu etat, int row, int col, char player) {
         // Clé de cache
@@ -345,6 +352,11 @@ public class MinMaxAlphaBeta extends Joueur {
     
     /**
      * Vérifie si un alignement de 5 est formé à partir de la position donnée
+     * @param plateau Plateau de jeu
+     * @param row Ligne de la position
+     * @param col Colonne de la position
+     * @param taille Taille du plateau
+     * @return true si un alignement de 5 est formé
      */
     private boolean checkWin(char[][] plateau, int row, int col, int taille) {
         char player = plateau[row][col];
@@ -385,7 +397,13 @@ public class MinMaxAlphaBeta extends Joueur {
     }
     
     /**
-     * Calcule le score des formations
+     * Calcule le score des formations autour d'une position
+     * @param plateau Plateau de jeu
+     * @param row Ligne de la position
+     * @param col Colonne de la position
+     * @param player Symbole du joueur
+     * @param taille Taille du plateau
+     * @return Score de la formation
      */
     private int calculatePatternScore(char[][] plateau, int row, int col, char player, int taille) {
         int score = 0;
@@ -595,6 +613,8 @@ public class MinMaxAlphaBeta extends Joueur {
 
     /**
      * Évalue l'état actuel du plateau
+     * @param etat État actuel du jeu
+     * @return Score de l'état du plateau
      */
     private int evaluerPosition(EtatDuJeu etat) {
         // Clé de cache
@@ -628,6 +648,8 @@ public class MinMaxAlphaBeta extends Joueur {
     
     /**
      * Convertit le plateau en chaîne de caractères pour la clé de cache
+     * @param plateau Plateau de jeu
+     * @return Représentation en chaîne du plateau
      */
     private String boardToString(char[][] plateau) {
         StringBuilder sb = new StringBuilder();

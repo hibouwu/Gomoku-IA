@@ -44,10 +44,10 @@ import javafx.util.Duration;
  */
 public class GomokuApp extends Application {
 
-    private final int taille = 15;
-    private final int tailleCase = 30;
-    private final int marge = 20;
-    private final int zoneSelection = 12;
+    private static final int TAILLE_PLATEAU = 15;
+    private static final int TAILLE_CASE = 40;
+    private static final int MARGE = 20;
+    private static final int ZONE_SELECTION = 12;
     private Canvas canvas;
     private EtatDuJeu etat;
     private Stage primaryStage;
@@ -66,9 +66,21 @@ public class GomokuApp extends Application {
     private int draws = 0;
     private TextArea infoTextArea;
 
+    /**
+     * Point d'entrée principal de l'application
+     * @param args Arguments de la ligne de commande
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    /**
+     * Initialise l'interface graphique
+     * @param primaryStage La fenêtre principale
+     */
     @Override
-    public void start(Stage stage) {
-        this.primaryStage = stage;
+    public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         primaryStage.setScene(creerSceneMenu());
         primaryStage.setTitle("Menu Gomoku");
         primaryStage.show();
@@ -187,9 +199,9 @@ public class GomokuApp extends Application {
     }
 
     private void lancerJeuUI() {
-        etat = new EtatDuJeu(taille);
+        etat = new EtatDuJeu(TAILLE_PLATEAU);
         etat.setJoueurActuel('X');
-        int size = taille*tailleCase + 2*marge;
+        int size = TAILLE_PLATEAU*TAILLE_CASE + 2*MARGE;
         canvas = new Canvas(size, size);
         drawBoard();
         tournoiEnCours = false;
@@ -207,13 +219,13 @@ public class GomokuApp extends Application {
             if (modeIA && etat.getJoueurActuel()=='O') return;
             if (modeIAvsIA) return; // si le mode est AI vs AI, les humains ne peuvent pas jouer
 
-            double x = e.getX() - marge, y = e.getY() - marge;
-            int col = (int)Math.round(x/ tailleCase),
-                    row = (int)Math.round(y/ tailleCase);
-            double dx = Math.abs(x - col*tailleCase),
-                    dy = Math.abs(y - row*tailleCase);
-            if (row<0||row>=taille||col<0||col>=taille
-                    || dx>zoneSelection||dy>zoneSelection) return;
+            double x = e.getX() - MARGE, y = e.getY() - MARGE;
+            int col = (int)Math.round(x/ TAILLE_CASE),
+                    row = (int)Math.round(y/ TAILLE_CASE);
+            double dx = Math.abs(x - col*TAILLE_CASE),
+                    dy = Math.abs(y - row*TAILLE_CASE);
+            if (row<0||row>=TAILLE_PLATEAU||col<0||col>=TAILLE_PLATEAU
+                    || dx>ZONE_SELECTION||dy>ZONE_SELECTION) return;
             if (etat.getPlateau()[row][col] != '.') return;
 
             int[] res = LancerJeu.jouerCoup(etat, row, col);
@@ -258,7 +270,7 @@ public class GomokuApp extends Application {
                 iaTimer.stop();
                 tournoiEnCours = false;
             }
-            etat = new EtatDuJeu(taille);
+            etat = new EtatDuJeu(TAILLE_PLATEAU);
             etat.setJoueurActuel('X');
             drawBoard();
             updateInfoPanel();
@@ -352,7 +364,7 @@ public class GomokuApp extends Application {
         }
         
         // réinitialiser le plateau
-        etat = new EtatDuJeu(taille);
+        etat = new EtatDuJeu(TAILLE_PLATEAU);
         etat.setJoueurActuel('X');
         drawBoard();
         updateInfoPanel();
@@ -485,19 +497,19 @@ public class GomokuApp extends Application {
         g.setFill(Color.BEIGE);
         g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
         g.setStroke(Color.BLACK);
-        for (int i=0; i<taille; i++) {
-            g.strokeLine(marge, marge+i*tailleCase,
-                    marge+(taille-1)*tailleCase, marge+i*tailleCase);
-            g.strokeLine(marge+i*tailleCase, marge,
-                    marge+i*tailleCase, marge+(taille-1)*tailleCase);
+        for (int i=0; i<TAILLE_PLATEAU; i++) {
+            g.strokeLine(MARGE, MARGE+i*TAILLE_CASE,
+                    MARGE+(TAILLE_PLATEAU-1)*TAILLE_CASE, MARGE+i*TAILLE_CASE);
+            g.strokeLine(MARGE+i*TAILLE_CASE, MARGE,
+                    MARGE+i*TAILLE_CASE, MARGE+(TAILLE_PLATEAU-1)*TAILLE_CASE);
         }
     }
 
     private void drawStone(int row, int col) {
         GraphicsContext g = canvas.getGraphicsContext2D();
-        double x = marge + col*tailleCase,
-                y = marge + row*tailleCase,
-                r = tailleCase*0.45;
+        double x = MARGE + col*TAILLE_CASE,
+                y = MARGE + row*TAILLE_CASE,
+                r = TAILLE_CASE*0.45;
         g.setFill(etat.getPlateau()[row][col]=='X' ? Color.BLACK : Color.WHITE);
         g.fillOval(x-r, y-r, r*2, r*2);
         g.strokeOval(x-r, y-r, r*2, r*2);
@@ -515,9 +527,5 @@ public class GomokuApp extends Application {
         } else {
             Platform.runLater(() -> alert.showAndWait());
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

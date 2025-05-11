@@ -29,10 +29,10 @@ public class MinMaxBasique extends Joueur {
     }
 
     /**
-     * Trouve le meilleur coup à jouer pour l'IA en utilisant l'algorithme Minimax.
-     * @param etat L'état actuel du jeu.
-     * @param profondeur La profondeur de recherche de l'algorithme.
-     * @return Un tableau de deux entiers [ligne, colonne] représentant le meilleur coup, ou null si aucun coup n'est possible.
+     * Trouve le meilleur coup à jouer pour l'IA en utilisant l'algorithme Minimax
+     * @param etat L'état actuel du jeu
+     * @param profondeur La profondeur de recherche de l'algorithme
+     * @return Un tableau de deux entiers [ligne, colonne] représentant le meilleur coup
      */
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int profondeur) {
         int meilleurScore = Integer.MIN_VALUE;
@@ -65,11 +65,11 @@ public class MinMaxBasique extends Joueur {
     }
 
     /**
-     * Fonction récursive Minimax.
-     * @param etat L'état du jeu.
-     * @param profondeur La profondeur restante.
-     * @param estMaximisant true si c'est le tour du joueur maximisant (IA), false sinon.
-     * @return Le score de la branche explorée.
+     * Fonction récursive Minimax
+     * @param etat L'état du jeu
+     * @param profondeur La profondeur restante
+     * @param estMaximisant true si c'est le tour du joueur maximisant (IA), false sinon
+     * @return Le score de la branche explorée
      */
     private int minimax(EtatDuJeu etat, int profondeur, boolean estMaximisant) {
         // Condition d'arrêt: profondeur atteinte, victoire détectée, ou plateau plein
@@ -116,9 +116,9 @@ public class MinMaxBasique extends Joueur {
     }
 
     /**
-     * Évalue la position actuelle du plateau.
-     * @param etat L'état du jeu.
-     * @return Le score de la position (positif pour IA, négatif pour adversaire).
+     * Évalue la position actuelle du plateau
+     * @param etat L'état du jeu
+     * @return Le score de la position (positif pour IA, négatif pour adversaire)
      */
     private int evaluerPosition(EtatDuJeu etat) {
         int score = 0;
@@ -155,13 +155,13 @@ public class MinMaxBasique extends Joueur {
     }
 
     /**
-     * Évalue une séquence de 5 cases.
+     * Évalue une séquence de 5 cases
      * @param c1 Case 1
      * @param c2 Case 2
      * @param c3 Case 3
      * @param c4 Case 4
      * @param c5 Case 5
-     * @return Le score de la séquence.
+     * @return Le score de la séquence
      */
     private int evaluerSequence(char c1, char c2, char c3, char c4, char c5) {
         int score = 0;

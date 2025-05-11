@@ -89,6 +89,13 @@ public class IAHeuristiqueSimple extends Joueur {
 
     /**
      * Évalue une direction spécifique pour une position donnée
+     * @param plateau Le plateau de jeu
+     * @param ligne La ligne de la position
+     * @param colonne La colonne de la position
+     * @param deltaLigne Le déplacement en ligne
+     * @param deltaColonne Le déplacement en colonne
+     * @param taille La taille du plateau
+     * @return Le score de la direction
      */
     private int evaluerDirection(char[][] plateau, int ligne, int colonne, int deltaLigne, int deltaColonne, int taille) {
         int score = 0;

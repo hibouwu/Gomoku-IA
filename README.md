@@ -38,13 +38,12 @@ Pour en savoir plus sur le jeu, vous pouvez consulter la page Wikipedia :
 
 ### Prérequis
 
-- **Java JDK** (version 8 ou supérieure)
+- **Java JDK** (version 21 ou supérieure)
 - Un environnement de développement (IntelliJ IDEA, Eclipse, etc.) ou un terminal
-- 
-### Exécution avec .jar
+
+### Exécution du .jar
 ```bash
 java "-Dprism.order=sw" "-Djava.library.path=lib/bin" --module-path lib --add-modules javafx.controls,javafx.fxml -jar out/artifacts/Gomoku_IA_jar/Gomoku-IA.jar
-
 ```
 
 

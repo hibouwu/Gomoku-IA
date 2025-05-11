@@ -63,7 +63,7 @@ Assurez-vous que le dossier bin existe ou qu'il sera créé pour contenir les fi
 Pour lancer le jeu, exécutez l'une des commandes suivantes :
 
 ```bash
-java "-Dprism.order=sw" --module-path lib --add-modules javafx.controls,javafx.fxml -cp bin GomokuApp
+java "-Dprism.order=sw" "-Djava.library.path=lib/bin"--module-path lib --add-modules javafx.controls,javafx.fxml -cp bin GomokuApp
 ```
 
 ## Auteurs

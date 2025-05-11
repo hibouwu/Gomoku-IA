@@ -46,7 +46,7 @@ Pour en savoir plus sur le jeu, vous pouvez consulter la page Wikipedia :
 Si vous travaillez en ligne de commande, placez-vous dans le répertoire racine du projet et compilez les sources par exemple avec :
 
 ```bash
-javac -d bin src/*.java
+javac --module-path lib --add-modules javafx.controls,javafx.fxml -d bin (Get-ChildItem -Recurse -Filter *.java -Path src).FullName
 ```
 
 Assurez-vous que le dossier bin existe ou qu'il sera créé pour contenir les fichiers compilés.
@@ -56,47 +56,17 @@ Assurez-vous que le dossier bin existe ou qu'il sera créé pour contenir les fi
 Pour lancer le jeu, exécutez l'une des commandes suivantes :
 
 ```bash
-java -cp bin LancerUnJeu
+java "-Dprism.order=sw" --module-path lib --add-modules javafx.controls,javafx.fxml -cp bin GomokuApp
 ```
 
 ## Auteurs
 
-- [Shi Jianye]
-- [Cai Josephine]
+- [SHI Jianye]
+- [CAI Josephine]
 
 ## Licence
 
 Ce projet est distribué sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 
-## Résultats
 
-
-joueur 1 : IA Simple
-joueur 2 : IA MinMax
-joueur 3 : IA Alpha-Beta
-joueur 4 : IA MCTS
-
-joueur 1 vs joueur 2:
-IA Simple (X): 25 victoires
-IA MinMax (O): 0 victoires
-
-joueur 2 vs joueur 1
-IA MinMax (X): 0 victoires
-IA Simple (O): 25 victoires
-
-joueur 1 vs joueur 3
-IA Simple (X): 25 victoires
-IA Alpha-Beta (O): 0 victoires
-
-joueur 3 vs joueur 1
-IA Alpha-Beta (X): 0 victoires
-IA Simple (O): 25 victoires
-
-joueur 1 vs joueur 4
-IA Simple (X): 0 victoires
-IA MCTS (O): 25 victoires
-
-joueur 4 vs joueur 1
-IA MCTS (X): 25 victoires
-IA Simple (O): 0 victoires

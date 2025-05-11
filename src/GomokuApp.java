@@ -436,7 +436,7 @@ public class GomokuApp extends Application {
         iaTimer.setOnFinished(evt -> {
             // AI joue
             int[] m = LancerJeu.jouerCoupIA(etat, niveauIAActuel);
-            char currentPlayer = etat.getJoueurActuel(); // 保存当前玩家，用于后续判断
+            char currentPlayer = etat.getJoueurActuel();
             int[] res = LancerJeu.jouerCoup(etat, m[0], m[1]);
             drawStone(m[0], m[1]);
             

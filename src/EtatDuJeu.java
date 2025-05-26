@@ -1,26 +1,20 @@
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Classe représentant l'état du jeu de Gomoku.
- * 
- * Cette classe gère :
+ * Cette classe gère
  * - Le plateau de jeu
  * - Le joueur actuel
  * - L'état de fin de partie
  * - La taille du plateau
- * 
- * Elle fournit des méthodes pour :
+ * Elle fournit des méthodes pour
  * - Accéder et modifier l'état du jeu
  * - Vérifier la validité des coups
- * - Gérer le tour des joueurs
+ * - Gérer le tour des joueurs.
  */
 public class EtatDuJeu {
-    private char[][] plateau;
+    private final char[][] plateau;
     private char joueurActuel;
     private boolean finDuJeu;
-    private int taillePlateau;
+    private final int taillePlateau;
 
     /**
      * Constructeur de l'état du jeu
@@ -86,18 +80,6 @@ public class EtatDuJeu {
      */
     public int getTaillePlateau() {
         return taillePlateau;
-    }
-
-    /**
-     * Vérifie si un coup est valide
-     * @param ligne La ligne du coup
-     * @param colonne La colonne du coup
-     * @return true si le coup est valide, false sinon
-     */
-    public boolean estCoupValide(int ligne, int colonne) {
-        return ligne >= 0 && ligne < taillePlateau && 
-               colonne >= 0 && colonne < taillePlateau && 
-               plateau[ligne][colonne] == '.';
     }
 
     public String getJoueurActuelCouleur(char joueur){

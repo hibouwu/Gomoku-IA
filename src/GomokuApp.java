@@ -534,6 +534,6 @@ public class GomokuApp extends Application {
         alert.showAndWait();
         } else {
             Platform.runLater(() -> alert.showAndWait());
-        }
+    }
     }
 }

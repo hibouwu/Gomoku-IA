@@ -84,7 +84,7 @@ public class MCTS extends Joueur {
             // 1. sélectionner: sélectionner un noeud feuille prometteur à partir de la racine
             Node nodeToExplore = selectPromisingNode(rootNode);
             
-            // 2. développer: si le noeud sélectionné n'est pas un état terminal et a des coups non essayés, le développer
+            // 2. Expansion: si le noeud sélectionné n'est pas un état terminal et a des coups non essayés, le développer
             if (!LancerJeu.verifierVictoire(nodeToExplore.etat, -1, -1) && 
                 !LancerJeu.estPlateauPlein(nodeToExplore.etat)) {
                 expandNode(nodeToExplore);

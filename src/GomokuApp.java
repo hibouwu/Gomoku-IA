@@ -2,7 +2,6 @@
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,13 +24,13 @@ import javafx.util.Duration;
 /**
  * Application principale de Gomoku avec interface graphique.
  * 
- * Cette classe implémente l'interface graphique du jeu en utilisant JavaFX :
+ * Cette classe implémente l'interface graphique du jeu en utilisant JavaFX
  * - Gestion de la fenêtre principale
  * - Affichage du plateau de jeu
  * - Interaction avec les joueurs
- * - Configuration des parties
+ * - Configuration des parties.
  * 
- * Fonctionnalités :
+ * Fonctionnalités
  * - Interface graphique moderne et intuitive
  * - Support des joueurs humains et IA
  * - Options de configuration du jeu
@@ -85,7 +84,7 @@ public class GomokuApp extends Application {
         primaryStage.show();
     }
     /**
-     * créer l'interface graphique du menu
+     * Créer l'interface graphique du menu
      */
     private Scene creerSceneMenu() {
         VBox menuBox = new VBox(20);
@@ -434,7 +433,7 @@ public class GomokuApp extends Application {
         // créer un délai, permettre à l'UI de mettre à jour
         iaTimer = new PauseTransition(Duration.seconds(0.5));
         iaTimer.setOnFinished(evt -> {
-            // AI joue
+            // AI
             int[] m = LancerJeu.jouerCoupIA(etat, niveauIAActuel);
             char currentPlayer = etat.getJoueurActuel();
             int[] res = LancerJeu.jouerCoup(etat, m[0], m[1]);
@@ -521,7 +520,7 @@ public class GomokuApp extends Application {
         g.strokeOval(x-r, y-r, r*2, r*2);
     }
     /**
-     * création du pop up d'information
+     * Création du pop up d'information
      */
     private void showAlert(String msg) {
         Alert alert = new Alert(AlertType.INFORMATION);

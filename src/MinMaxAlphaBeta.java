@@ -9,18 +9,18 @@ import java.util.Random;
 
 /**
  * Implémentation de l'algorithme Minimax avec élagage Alpha-Beta pour le jeu de Gomoku.
- * 
+ * <p>
  * Cette classe utilise l'algorithme Minimax amélioré avec élagage Alpha-Beta pour trouver le meilleur coup à jouer.
  * L'algorithme combine la recherche en profondeur avec des techniques d'optimisation pour évaluer les positions.
- * 
- * Caractéristiques principales :
+ * <p>
+ * Caractéristiques principales
  * - Utilise l'élagage Alpha-Beta pour réduire l'espace de recherche
  * - Implémente une recherche itérative progressive
  * - Utilise un cache d'évaluation pour éviter les calculs redondants
  * - Optimise la recherche en triant les coups candidats
  * - Inclut des heuristiques avancées pour l'évaluation des positions
- * 
- * Optimisations :
+ * <p>
+ * Optimisations
  * - Limite de temps pour éviter les dépassements
  * - Profondeur de recherche maximale configurable
  * - Mode agressif/défensif ajustable
@@ -31,13 +31,10 @@ public class MinMaxAlphaBeta extends Joueur {
 
     // Contrôle du timeout et meilleurs paramètres
     private long startTime;
-    private long timeLimit = 9000; // Augmentation de la limite de timeout à 9 secondes
     private boolean timeOut = false;
-    private Random random = new Random();
-    private int maxSearchDepth = 4; // Profondeur de recherche maximale
+    private final Random random = new Random();
     private final int WIN_SCORE = 1000000;
-    private final int THREAT_SCORE = 20000; // Augmentation du score de menace
-    private boolean isAggressive = true; // Mode plus agressif
+    private final boolean isAggressive = true; // Mode agressif
 
     // Cache d'évaluation pour éviter les calculs redondants
     private Map<String, Integer> evaluationCache = new HashMap<>();
@@ -60,7 +57,8 @@ public class MinMaxAlphaBeta extends Joueur {
     public int[] trouverMeilleurCoup(EtatDuJeu etat, int profondeur) {
         // Vider le cache d'évaluation
         evaluationCache.clear();
-        
+        // Profondeur de recherche maximale
+        int maxSearchDepth = 4;
         profondeur = Math.min(profondeur, maxSearchDepth); // Limiter la profondeur maximale
         startTime = System.currentTimeMillis();
         timeOut = false;
@@ -94,8 +92,8 @@ public class MinMaxAlphaBeta extends Joueur {
         char[][] plateau = etat.getPlateau();
         
         // Paramètres Alpha-Beta
-        int alpha = Integer.MIN_VALUE;
-        int beta = Integer.MAX_VALUE;
+        int alpha;
+        int beta;
 
         // Obtenir tous les coups candidats et les trier par score heuristique
         List<int[]> candidatMoves = getOrderedMoves(etat);
@@ -248,7 +246,7 @@ public class MinMaxAlphaBeta extends Joueur {
         }
         
         // Tri stable
-        Collections.sort(scoredMoves, new Comparator<MoveScore>() {
+        Collections.sort(scoredMoves, new Comparator<>() {
             @Override
             public int compare(MoveScore m1, MoveScore m2) {
                 if (m1.score != m2.score) {
@@ -272,16 +270,16 @@ public class MinMaxAlphaBeta extends Joueur {
     
     /**
      * Classe utilitaire pour stocker et trier les coups avec leurs scores.
-     * 
-     * Cette classe est utilisée pour :
+     * <p>
+     * Cette classe est utilisée pour
      * - Associer un coup (position) avec son score d'évaluation
      * - Faciliter le tri des coups par score
-     * - Maintenir l'ordre stable lors du tri
-     * 
+     * - Maintenir l'ordre stable lors du tri.
+     * <p>
      * Les coups sont triés principalement par score, puis par position
      * pour assurer un ordre déterministe des coups de même score.
      */
-    private class MoveScore {
+    private static class MoveScore {
         int[] move;
         int score;
         
@@ -333,7 +331,7 @@ public class MinMaxAlphaBeta extends Joueur {
         
         // En mode attaque, réduire le poids de la défense
         double defenseWeight = isAggressive ? 0.6 : 0.8;
-        score += calculatePatternScore(plateau, row, col, opponent, taille) * defenseWeight;
+        score = (int) (score + calculatePatternScore(plateau, row, col, opponent, taille) * defenseWeight);
         
         // Restaurer la case vide
         plateau[row][col] = '.';
@@ -419,13 +417,11 @@ public class MinMaxAlphaBeta extends Joueur {
             // Compter les pièces consécutives et les extrémités libres
             int count = 1; // Compter la position actuelle
             int openEnds = 0; // Nombre d'extrémités libres
-            boolean blockedBefore = false, blockedAfter = false;
-            
+
             // Vérifier dans la direction positive
             for (int i = 1; i <= 4; i++) {
                 int nx = row + i * dx, ny = col + i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
-                    blockedBefore = true;
                     break;
                 }
                 
@@ -435,7 +431,6 @@ public class MinMaxAlphaBeta extends Joueur {
                     openEnds++;
                     break;
                 } else {
-                    blockedBefore = true;
                     break;
                 }
             }
@@ -444,7 +439,6 @@ public class MinMaxAlphaBeta extends Joueur {
             for (int i = 1; i <= 4; i++) {
                 int nx = row - i * dx, ny = col - i * dy;
                 if (nx < 0 || nx >= taille || ny < 0 || ny >= taille) {
-                    blockedAfter = true;
                     break;
                 }
                 
@@ -454,7 +448,6 @@ public class MinMaxAlphaBeta extends Joueur {
                     openEnds++;
                     break;
                 } else {
-                    blockedAfter = true;
                     break;
                 }
             }
@@ -463,6 +456,8 @@ public class MinMaxAlphaBeta extends Joueur {
             if (count >= 5) {
                 score += WIN_SCORE; // Alignement de 5
             } else if (count == 4) {
+                // Augmentation du score de menace
+                int THREAT_SCORE = 20000;
                 if (openEnds == 2) score += THREAT_SCORE * 10; // Quatre libres
                 else if (openEnds == 1) score += THREAT_SCORE; // Quatre bloqué
             } else if (count == 3) {
@@ -490,6 +485,8 @@ public class MinMaxAlphaBeta extends Joueur {
      */
     private int alphaBeta(EtatDuJeu etat, int profondeur, int alpha, int beta, boolean estMaximisant) {
         // Vérifier le timeout
+        // Augmentation de la limite de timeout à 9 secondes
+        long timeLimit = 9000;
         if (System.currentTimeMillis() - startTime > timeLimit) {
             timeOut = true;
             return 0; // Retourner un score neutre
@@ -545,7 +542,7 @@ public class MinMaxAlphaBeta extends Joueur {
             }
             
             // Tri stable
-            Collections.sort(scoredMoves, new Comparator<MoveScore>() {
+            scoredMoves.sort(new Comparator<>() {
                 @Override
                 public int compare(MoveScore m1, MoveScore m2) {
                     if (m1.score != m2.score) {
@@ -634,7 +631,7 @@ public class MinMaxAlphaBeta extends Joueur {
                 } else if (plateau[i][j] == 'X') { // Adversaire
                     // En mode attaque, réduire légèrement le poids de l'évaluation de l'adversaire
                     double opponentWeight = isAggressive ? 0.9 : 1.0;
-                    score -= calculatePatternScore(plateau, i, j, 'X', taille) * opponentWeight;
+                    score = (int) (score - (calculatePatternScore(plateau, i, j, 'X', taille) * opponentWeight));
                 }
             }
         }
